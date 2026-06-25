@@ -1,0 +1,30 @@
+# Entornos locales — NO subir
+/env/
+/ache_env/
+/.venv/
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Secretos locales — cargar en Streamlit Cloud > Secrets
+.streamlit/secrets.toml
+
+# Base local de demo/casos — evitar publicar datos de pacientes
+/data/*.db
+/data/*.sqlite
+/data/*.sqlite3
+
+# Backups y temporales
+*.backup*
+*_backup*
+*.tmp
+*.log
+
+# Archivos generados
+outputs/
+*.stl
+*.obj
+*.step
+*.stp
+*.pdf
