@@ -1,23 +1,22 @@
 """
 Ache Innovation — Módulo de Detección de Raza
 
-Usa modelos públicos de clasificación de imágenes de Hugging Face.
-El modelo anterior del MVP dejó de estar disponible, por eso este módulo
-prueba modelos estables y normaliza las etiquetas a nombres de raza.
+Usa la Inference API de Hugging Face (HTTP) para clasificar razas caninas.
+No carga modelos localmente — no requiere torch ni transformers.
 """
 
+import io
+import time
 from typing import List, Dict
 
+import requests
 import streamlit as st
 from PIL import Image
 
 
-MODEL_CANDIDATES = [
-    # ImageNet: incluye muchas razas caninas comunes, incluyendo Golden Retriever y Labrador.
-    "google/vit-base-patch16-224",
-    "microsoft/resnet-50",
-]
-
+# Modelo público de clasificación ImageNet (incluye razas caninas).
+MODEL_ID = "google/vit-base-patch16-224"
+HF_API_URL = f"https://api-inference.huggingface.co/models/{MODEL_ID}"
 
 DOG_KEYWORDS = {
     "retriever", "labrador", "golden", "terrier", "spaniel", "poodle",
@@ -30,9 +29,8 @@ DOG_KEYWORDS = {
 
 
 def _clean_label(label: str) -> str:
-    # Algunos modelos devuelven labels tipo "golden retriever, Golden Retriever".
     label = label.split(",")[0].strip()
-    label = label.replace("_", " " ).replace("-", " ")
+    label = label.replace("_", " ").replace("-", " ")
     return " ".join(label.split())
 
 
@@ -41,55 +39,61 @@ def _looks_like_dog_breed(label: str) -> bool:
     return any(k in low for k in DOG_KEYWORDS)
 
 
-@st.cache_resource(show_spinner="Cargando modelo de detección de raza...")
-def _load_model():
-    """Carga un clasificador público. Prueba varios por si uno falla."""
-    from transformers import pipeline
-
-    errors = []
-    for model_name in MODEL_CANDIDATES:
-        try:
-            clf = pipeline(
-                "image-classification",
-                model=model_name,
-                top_k=10,
-            )
-            return clf, model_name
-        except Exception as exc:  # pragma: no cover - depende de red/cache local
-            errors.append(f"{model_name}: {exc}")
-
-    raise RuntimeError(
-        "No se pudo cargar ningún modelo público de detección de raza. "
-        + " | ".join(errors)
-    )
+def _get_hf_token() -> str | None:
+    """Lee el token de Hugging Face desde Streamlit secrets (opcional)."""
+    try:
+        return st.secrets.get("HF_TOKEN")
+    except Exception:
+        return None
 
 
 def detect_breed(image: Image.Image) -> List[Dict]:
     """
-    Detecta la raza del perro en una imagen.
+    Detecta la raza del perro en una imagen usando la HF Inference API.
+    No carga ningún modelo localmente.
 
     Returns:
         Lista de dicts con label y score.
     """
-    classifier, _model_name = _load_model()
+    # Convertir imagen a bytes JPEG para enviar por HTTP
     img = image.convert("RGB")
-    results = classifier(img)
+    buf = io.BytesIO()
+    img.save(buf, format="JPEG", quality=90)
+    img_bytes = buf.getvalue()
 
-    # Transformers a veces devuelve [[...]] dependiendo de versión/top_k.
-    if results and isinstance(results[0], list):
-        results = results[0]
+    headers = {"Content-Type": "application/octet-stream"}
+    token = _get_hf_token()
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
 
+    # Si el modelo está dormido en HF, esperamos hasta 30 seg
+    for attempt in range(3):
+        resp = requests.post(HF_API_URL, headers=headers, data=img_bytes, timeout=30)
+
+        if resp.status_code == 200:
+            break
+        if resp.status_code == 503:
+            # Modelo cargando — HF devuelve {"estimated_time": N}
+            wait = min(resp.json().get("estimated_time", 10), 20)
+            time.sleep(wait)
+            continue
+        raise RuntimeError(
+            f"HF Inference API error {resp.status_code}: {resp.text[:200]}"
+        )
+    else:
+        raise RuntimeError("El modelo de detección de raza tardó demasiado en cargar. Intente de nuevo en unos segundos.")
+
+    raw = resp.json()
+
+    # La API devuelve [{"label": "...", "score": 0.99}, ...]
     normalized = []
-    for r in results:
+    for r in raw:
         label = _clean_label(str(r.get("label", "")))
         score = float(r.get("score", 0.0))
         if label:
             normalized.append({"label": label, "score": score})
 
     dog_results = [r for r in normalized if _looks_like_dog_breed(r["label"])]
-
-    # Si el modelo devuelve mezcla de objetos/animales, priorizamos razas de perro.
-    # Si no encontró keywords caninas, devolvemos lo mejor que haya para que la UI no explote.
     return dog_results[:5] if dog_results else normalized[:5]
 
 
