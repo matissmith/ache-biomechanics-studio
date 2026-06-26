@@ -901,8 +901,8 @@ function checkStudio() {
     .then(() => {
       offline.style.display = 'none';
       iframe.style.display  = 'block';
-      if (!iframe.src || iframe.src === 'about:blank' || iframe.src !== studioUrl + '/?embed=true') {
-        iframe.src = studioUrl + '/?embed=true&embed_options=disable_scrolling';
+      if (!iframe.src || iframe.src === 'about:blank' || iframe.src !== studioUrl) {
+        iframe.src = studioUrl + '/?embed_options=hide_toolbar,hide_footer';
       }
       link.href = studioUrl;
       clearInterval(window._studioRetry);
