@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ache Innovation – Potenciamos la movilidad animal</title>
+
+<!-- Barlow (body + títulos) y Exo 2 (sub ConthraxSb) desde Google Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,300;1,400&family=Barlow+Condensed:wght@400;500;600;700;800;900&family=Exo+2:wght@700;800;900&display=swap" rel="stylesheet">
+
+<style>
+/* ═══════════════════════════════════════════════════
+   DESIGN TOKENS — Ache Innovation Brand Manual
+   ─────────────────────────────────────────────────
+   Primary  #0A2560  navy
+   Secondary #F29E1F  amber
+   Font logo: ConthraxSb-Regular → fallback Exo 2
+   Títulos:   Barlow Regular
+   Cuerpo:    Barlow Light
+═══════════════════════════════════════════════════ */
+:root {
+  /* brand */
+  --navy:    #0A2560;
+  --navy-dk: #071840;
+  --navy-lt: #1a3a7a;
+  --amber:   #F29E1F;
+  --amber-lt:#F5B84A;
+  --amber-dk:#c87d0a;
+  /* ui */
+  --white:   #ffffff;
+  --off:     #F5F7FB;
+  --gl:      #E2E9F5;
+  --gm:      #8896B0;
+  --txt:     #0D1B35;
+  --txt2:    #4A5568;
+  /* productive world */
+  --agro:    #1a3020;
+  --agro-lt: #2d5038;
+  --agro-a:  #7dc46a;
+}
+
+/* ── RESET ── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Barlow',sans-serif;font-weight:400;color:var(--txt2);background:var(--white);overflow-x:hidden}
+a{text-decoration:none;color:inherit}
+img{display:block;max-width:100%}
+
+/* ── FONT HELPERS ── */
+/* ConthraxSb: si está instalada localmente la usa; sino Exo 2 */
+@font-face {
+  font-family: 'ConthraxSb';
+  src: local('ConthraxSb-Regular'), local('Conthrax Sb Regular'), local('ConthraxSb');
+  font-weight: normal;
+  font-style: normal;
+}
+.font-brand { font-family: 'ConthraxSb', 'Exo 2', 'Barlow Condensed', sans-serif; }
+
+/* ══════════════════════════════════════════════
+   NAVBAR
+══════════════════════════════════════════════ */
+.nav {
+  position:fixed;top:0;left:0;right:0;z-index:900;
+  background:rgba(7,24,64,.97);backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(242,158,31,.15);
+  transition:box-shadow .3s
+}
+.nav-wrap {
+  max-width:1280px;margin:0 auto;padding:0 2rem;
+  height:70px;display:flex;align-items:center;justify-content:space-between;gap:1.5rem
+}
+
+/* ── LOGO ── */
+.logo-link{display:flex;align-items:center;gap:.75rem}
+/* Logo SVG mark */
+.logo-mark{width:46px;height:46px;flex-shrink:0}
+.logo-text-block{display:flex;flex-direction:column;line-height:1}
+.logo-ache {
+  font-family:'ConthraxSb','Exo 2','Barlow Condensed',sans-serif;
+  font-weight:900;font-size:23px;color:var(--white);
+  letter-spacing:4px;text-transform:uppercase
+}
+.logo-innovation {
+  font-family:'ConthraxSb','Exo 2','Barlow Condensed',sans-serif;
+  font-weight:700;font-size:9.5px;color:var(--amber);
+  letter-spacing:5px;text-transform:uppercase;margin-top:2px
+}
+
+/* ── NAV LINKS ── */
+.nav-links{display:flex;align-items:center;gap:1.5rem;list-style:none}
+.nav-links a{
+  font-family:'Barlow',sans-serif;font-size:14px;font-weight:500;
+  color:rgba(255,255,255,.72);transition:color .2s;letter-spacing:.3px
+}
+.nav-links a:hover{color:var(--amber)}
+.nav-pill {
+  padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700;
+  transition:all .2s
+}
+.nav-pill.mascotas{background:rgba(242,158,31,.2);color:var(--amber)}
+.nav-pill.mascotas:hover{background:var(--amber);color:var(--navy-dk)}
+.nav-pill.productivos{background:rgba(125,196,106,.15);color:#7dc46a}
+.nav-pill.productivos:hover{background:#7dc46a;color:var(--agro)}
+
+.nav-r{display:flex;align-items:center;gap:.875rem}
+.lang{display:flex;background:rgba(255,255,255,.1);border-radius:20px;padding:3px;gap:2px}
+.lb{padding:4px 12px;border:none;background:transparent;color:rgba(255,255,255,.5);font-size:12px;font-weight:700;cursor:pointer;border-radius:16px;font-family:'Barlow',sans-serif;transition:all .2s}
+.lb.on{background:var(--amber);color:var(--navy-dk)}
+
+/* ══════════════════════════════════════════════
+   HERO – LANDING PRINCIPAL
+══════════════════════════════════════════════ */
+.hero {
+  min-height:100vh;background:var(--navy-dk);
+  display:flex;align-items:center;overflow:hidden;
+  position:relative;padding-top:70px
+}
+.hero-bg {
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 60% 40%, rgba(242,158,31,.07) 0%,transparent 55%),
+    radial-gradient(ellipse at 5% 70%, rgba(26,58,122,.6) 0%,transparent 50%)
+}
+.hero-grid {
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,.022) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.022) 1px,transparent 1px);
+  background-size:55px 55px
+}
+.hero-ring {
+  position:absolute;border-radius:50%;
+  border:1px solid rgba(242,158,31,.07);
+  top:50%;right:-5%;transform:translateY(-50%)
+}
+.r1{width:420px;height:420px}
+.r2{width:700px;height:700px}
+.r3{width:1000px;height:1000px}
+
+.hero-inner {
+  position:relative;z-index:2;
+  max-width:1280px;margin:0 auto;padding:5rem 2rem;
+  display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;width:100%
+}
+
+/* Hero left */
+.hero-eyebrow {
+  display:inline-flex;align-items:center;gap:8px;
+  padding:5px 14px;margin-bottom:1.5rem;
+  background:rgba(242,158,31,.13);border:1px solid rgba(242,158,31,.28);border-radius:20px
+}
+.hero-eyebrow span{font-size:11px;font-weight:700;color:var(--amber);letter-spacing:2px;text-transform:uppercase}
+.pulse{width:6px;height:6px;background:var(--amber);border-radius:50%;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+
+.hero-h1 {
+  font-family:'ConthraxSb','Exo 2','Barlow Condensed',sans-serif;
+  font-size:clamp(38px,5vw,64px);font-weight:800;
+  color:var(--white);line-height:1.05;
+  text-transform:uppercase;letter-spacing:.5px;margin-bottom:1rem
+}
+.hero-h1 em{color:var(--amber);font-style:normal}
+
+.hero-tagline {
+  font-family:'Barlow',sans-serif;font-size:clamp(15px,1.8vw,20px);
+  font-style:italic;color:rgba(255,255,255,.5);margin-bottom:2rem;
+  font-weight:300;letter-spacing:.5px
+}
+
+.hero-desc {
+  font-family:'Barlow',sans-serif;font-size:16px;font-weight:300;
+  color:rgba(255,255,255,.62);line-height:1.75;max-width:480px;margin-bottom:3rem
+}
+
+/* Two-path CTAs */
+.hero-paths{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+.path-card {
+  border-radius:14px;padding:1.5rem;border:1.5px solid;
+  transition:all .3s;cursor:pointer;display:block
+}
+.path-card.pet{border-color:rgba(242,158,31,.35);background:rgba(242,158,31,.08)}
+.path-card.pet:hover{background:rgba(242,158,31,.18);border-color:var(--amber);transform:translateY(-3px)}
+.path-card.prod{border-color:rgba(125,196,106,.3);background:rgba(125,196,106,.07)}
+.path-card.prod:hover{background:rgba(125,196,106,.14);border-color:#7dc46a;transform:translateY(-3px)}
+.path-icon{font-size:34px;margin-bottom:.625rem}
+.path-title{font-family:'ConthraxSb','Exo 2','Barlow Condensed',sans-serif;font-size:17px;font-weight:800;text-transform:uppercase;letter-spacing:1px;margin-bottom:.35rem}
+.path-card.pet .path-title{color:var(--amber)}
+.path-card.prod .path-title{color:#7dc46a}
+.path-sub{font-size:12px;font-weight:400;color:rgba(255,255,255,.5);line-height:1.5}
+.path-arrow{display:inline-block;margin-top:.75rem;font-size:12px;font-weight:700;letter-spacing:1px}
+.path-card.pet .path-arrow{color:var(--amber)}
+.path-card.prod .path-arrow{color:#7dc46a}
+
+/* Hero right — large logo */
+.hero-right {
+  display:flex;align-items:center;justify-content:center
+}
+.hero-logo-wrap {
+  display:flex;flex-direction:column;align-items:center;gap:2rem
+}
+.hero-logo-svg{width:280px;height:auto;filter:drop-shadow(0 20px 60px rgba(0,0,0,.4))}
+.hero-logo-brand {
+  text-align:center
+}
+.hero-logo-ache {
+  font-family:'ConthraxSb','Exo 2','Barlow Condensed',sans-serif;
+  font-size:64px;font-weight:900;color:var(--white);
+  letter-spacing:8px;text-transform:uppercase;line-height:1;display:block
+}
+.hero-logo-innovation {
+  font-family:'ConthraxSb','Exo 2','Barlow Condensed',sans-serif;
+  font-size:22px;font-weight:700;color:var(--amber);
+  letter-spacing:10px;text-transform:uppercase;display:block;margin-top:4px
+}
+
+/* ══════════════════════════════════════════════
+   NOSOTROS / FORMULA
+══════════════════════════════════════════════ */
+.about{background:var(--off);padding:90px 0}
+.about-inner{max-width:1280px;margin:0 auto;padding:0 2rem;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center}
+.sec-eyebrow{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--amber);margin-bottom:1rem}
+.sec-h {
+  font-family:'Barlow Condensed',sans-serif;font-size:clamp(28px,3.5vw,46px);
+  font-weight:800;color:var(--txt);line-height:1.1;text-transform:uppercase
+}
+.sec-h.wh{color:var(--white)}
+.sec-p{font-family:'Barlow',sans-serif;font-size:16px;font-weight:300;color:var(--txt2);line-height:1.78;margin-top:1rem}
+.sec-p.wh{color:rgba(255,255,255,.68)}
+
+.formula-box {
+  background:var(--navy-dk);border-radius:16px;padding:2.5rem;margin-top:2.5rem;
+  position:relative;overflow:hidden
+}
+.formula-box::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 85% 20%, rgba(242,158,31,.1) 0%,transparent 60%)}
+.formula-eq {
+  font-family:'ConthraxSb','Exo 2','Barlow Condensed',sans-serif;
+  font-size:clamp(14px,1.6vw,19px);font-weight:800;
+  color:var(--white);text-transform:uppercase;letter-spacing:1px;
+  line-height:1.6;position:relative;z-index:1
+}
+.formula-eq em{color:var(--amber);font-style:normal}
+
+.vals-grid{display:grid;grid-template-columns:1fr 1fr;gap:.875rem;margin-top:2.5rem}
+.val{background:var(--white);border-radius:10px;padding:18px 20px;border-left:3px solid var(--amber);box-shadow:0 2px 10px rgba(10,37,96,.05)}
+.val h4{font-family:'Barlow Condensed',sans-serif;font-size:15px;font-weight:700;color:var(--txt);text-transform:uppercase;letter-spacing:.8px;margin-bottom:3px}
+.val p{font-family:'Barlow',sans-serif;font-size:13px;font-weight:300;color:var(--txt2);line-height:1.5}
+
+/* ══════════════════════════════════════════════
+   WORLD DIVIDERS
+══════════════════════════════════════════════ */
+.world-divider {
+  padding:3.5rem 0;display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden
+}
+.world-divider.mascotas-div{background:var(--navy)}
+.world-divider.productivos-div{background:var(--agro)}
+.world-divider-inner{
+  max-width:1280px;margin:0 auto;padding:0 2rem;
+  display:flex;align-items:center;justify-content:space-between;width:100%;gap:2rem;flex-wrap:wrap
+}
+.world-div-label{
+  display:flex;align-items:center;gap:1.25rem
+}
+.world-div-icon{font-size:48px}
+.world-div-text{}
+.world-div-title{
+  font-family:'ConthraxSb','Exo 2','Barlow Condensed',sans-serif;
+  font-size:clamp(28px,4vw,42px);font-weight:900;text-transform:uppercase;letter-spacing:3px;line-height:1
+}
+.mascotas-div .world-div-title{color:var(--amber)}
+.productivos-div .world-div-title{color:#7dc46a}
+.world-div-sub{font-size:13px;font-weight:400;color:rgba(255,255,255,.5);margin-top:4px;letter-spacing:.5px}
+.world-div-line{flex:1;height:1px;max-width:300px}
+.mascotas-div .world-div-line{background:linear-gradient(90deg,rgba(242,158,31,.5),transparent)}
+.productivos-div .world-div-line{background:linear-gradient(90deg,rgba(125,196,106,.5),transparent)}
+
+/* ══════════════════════════════════════════════
+   MASCOTAS — SOFTWARE IA
+══════════════════════════════════════════════ */
+.sw{background:var(--navy-dk);padding:90px 0;position:relative;overflow:hidden}
+.sw::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:40px 40px}
+.sw-hd{text-align:center;max-width:680px;margin:0 auto 4rem;position:relative;z-index:1}
+.sw-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:0 2rem}
+.sw-steps::before{content:'';position:absolute;top:52px;left:calc(12.5% + 24px);right:calc(12.5% + 24px);height:1px;background:linear-gradient(90deg,rgba(242,158,31,.4),rgba(242,158,31,.05) 50%,rgba(242,158,31,.4))}
+.step{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:2rem 1.25rem;text-align:center;transition:all .3s}
+.step:hover{background:rgba(255,255,255,.09);border-color:rgba(242,158,31,.35);transform:translateY(-5px)}
+.step-ic{width:68px;height:68px;background:rgba(242,158,31,.14);border:1px solid rgba(242,158,31,.3);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 1.25rem;position:relative}
+.step-n{position:absolute;top:-5px;right:-5px;width:20px;height:20px;background:var(--amber);color:var(--navy-dk);border-radius:50%;font-size:10px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.step-t{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;color:var(--white);text-transform:uppercase;margin-bottom:.5rem}
+.step-d{font-size:13px;font-weight:300;color:rgba(255,255,255,.52);line-height:1.6}
+.sw-tech{display:flex;flex-wrap:wrap;gap:.75rem;justify-content:center;margin-top:2.5rem;position:relative;z-index:1;max-width:1280px;margin:2.5rem auto 0;padding:0 2rem}
+.tech-pill{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:8px;padding:.6rem 1.1rem;font-size:12px;font-weight:500;color:rgba(255,255,255,.65);letter-spacing:.4px}
+.tech-pill strong{color:var(--amber);display:block;font-size:12px;margin-bottom:1px}
+.sw-cta{text-align:center;margin-top:3.5rem;position:relative;z-index:1}
+.sw-cta p{font-size:16px;font-weight:300;color:rgba(255,255,255,.6);margin-bottom:1.25rem}
+
+/* ══════════════════════════════════════════════
+   MASCOTAS — PRODUCTOS
+══════════════════════════════════════════════ */
+.mkt-pet{background:var(--white);padding:90px 0}
+.mkt-hd{max-width:1280px;margin:0 auto;padding:0 2rem;display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:2.5rem;flex-wrap:wrap;gap:1.5rem}
+.tabs{display:flex;gap:.5rem;flex-wrap:wrap;max-width:1280px;margin:0 auto 2.5rem;padding:0 2rem}
+.tab{padding:8px 18px;border-radius:24px;border:1.5px solid var(--gl);background:transparent;color:var(--txt2);font-size:13px;font-weight:500;cursor:pointer;font-family:'Barlow',sans-serif;transition:all .2s}
+.tab:hover{border-color:var(--navy);color:var(--navy)}
+.tab.on{background:var(--navy);border-color:var(--navy);color:var(--white)}
+.grid3{max-width:1280px;margin:0 auto;padding:0 2rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+
+.pc{background:var(--white);border:1.5px solid var(--gl);border-radius:18px;overflow:hidden;transition:all .3s}
+.pc:hover{border-color:var(--navy-lt);box-shadow:0 8px 40px rgba(10,37,96,.16);transform:translateY(-4px)}
+.pc-img{width:100%;aspect-ratio:4/3;background:linear-gradient(135deg,var(--gl),var(--off));display:flex;align-items:center;justify-content:center;font-size:58px;position:relative;overflow:hidden}
+.bdg{position:absolute;top:12px;left:12px;padding:4px 10px;border-radius:4px;font-size:10.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase}
+.bdg-n{background:var(--navy);color:var(--white)}
+.bdg-a{background:var(--amber);color:var(--navy-dk)}
+.bdg-g{background:rgba(255,255,255,.9);color:var(--gm)}
+.pc-body{padding:1.25rem 1.5rem 1.5rem}
+.pc-cat{font-size:10.5px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:1.5px;margin-bottom:.4rem}
+.pc-name{font-family:'Barlow Condensed',sans-serif;font-size:20px;font-weight:700;color:var(--txt);margin-bottom:.4rem}
+.pc-desc{font-size:13px;font-weight:300;color:var(--txt2);line-height:1.55;margin-bottom:1.25rem}
+.pc-foot{display:flex;align-items:center;justify-content:space-between}
+.pc-price{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:800;color:var(--navy)}
+.pc-price small{font-family:'Barlow',sans-serif;font-size:12px;font-weight:400;color:var(--gm)}
+.btn-cart{padding:10px 20px;background:var(--navy);color:var(--white);border:none;border-radius:6px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Barlow',sans-serif;transition:background .2s}
+.btn-cart:hover{background:var(--navy-lt)}
+.pc.feat{border-color:rgba(242,158,31,.45);background:linear-gradient(145deg,var(--navy-dk),var(--navy))}
+.pc.feat .pc-cat{color:var(--amber-lt)}
+.pc.feat .pc-name{color:var(--white)}
+.pc.feat .pc-desc{color:rgba(255,255,255,.58)}
+.pc.feat .pc-price{color:var(--amber)}
+.pc.feat .pc-price small{color:rgba(255,255,255,.35)}
+.pc.feat .btn-cart{background:var(--amber);color:var(--navy-dk)}
+.pc.feat .btn-cart:hover{background:var(--amber-lt)}
+
+/* ══════════════════════════════════════════════
+   ANIMALES PRODUCTIVOS — INTRO + STATS
+══════════════════════════════════════════════ */
+.prod-intro{background:var(--agro);padding:90px 0;position:relative;overflow:hidden}
+.prod-intro::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.015) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.015) 1px,transparent 1px);background-size:50px 50px}
+.prod-intro-inner{max-width:1280px;margin:0 auto;padding:0 2rem;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;position:relative;z-index:1}
+.prod-sec-eyebrow{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:#7dc46a;margin-bottom:1rem}
+.prod-formula{background:rgba(0,0,0,.3);border-radius:14px;padding:2rem;margin-top:2.5rem;border:1px solid rgba(125,196,106,.2)}
+.prod-formula p{font-family:'Barlow',sans-serif;font-size:14px;font-weight:300;color:rgba(255,255,255,.65);line-height:1.7}
+.prod-formula strong{color:#7dc46a;font-weight:600}
+
+.mkt-stats-grid{display:grid;grid-template-columns:1fr;gap:1.25rem}
+.mstat{background:rgba(0,0,0,.25);border:1px solid rgba(125,196,106,.2);border-radius:14px;padding:1.5rem 1.75rem;display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:center}
+.mstat-icon{font-size:36px}
+.mstat-num{font-family:'Barlow Condensed',sans-serif;font-size:38px;font-weight:900;color:#7dc46a;line-height:1}
+.mstat-desc{font-size:13px;font-weight:300;color:rgba(255,255,255,.65);line-height:1.5;margin-top:2px}
+.mstat-source{font-size:11px;color:rgba(255,255,255,.35);margin-top:4px;font-style:italic}
+
+/* ══════════════════════════════════════════════
+   BOVINOS
+══════════════════════════════════════════════ */
+.bovinos{background:var(--off);padding:90px 0}
+.bovinos-inner{max-width:1280px;margin:0 auto;padding:0 2rem;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.bovinos-card{background:var(--white);border-radius:18px;overflow:hidden;border:1.5px solid var(--gl);box-shadow:0 4px 20px rgba(10,37,96,.08)}
+.bovinos-card-img{width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,var(--agro),var(--agro-lt));display:flex;align-items:center;justify-content:center;font-size:80px;position:relative}
+.bovinos-card-img .coming-badge{position:absolute;top:16px;right:16px;padding:6px 14px;background:rgba(125,196,106,.9);color:var(--agro);border-radius:6px;font-size:12px;font-weight:700;font-family:'Barlow Condensed',sans-serif;text-transform:uppercase;letter-spacing:1px}
+.bovinos-card-body{padding:1.75rem}
+.bovinos-card-body h3{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:700;color:var(--txt);text-transform:uppercase;margin-bottom:.5rem}
+.bovinos-card-body p{font-size:14px;font-weight:300;color:var(--txt2);line-height:1.65;margin-bottom:1.25rem}
+.bovinos-card-features{display:flex;flex-direction:column;gap:.625rem}
+.bfeat{display:flex;align-items:center;gap:.625rem;font-size:13px;font-weight:400;color:var(--txt2)}
+.bfeat::before{content:'✓';color:#27ae60;font-weight:700;flex-shrink:0}
+
+/* ══════════════════════════════════════════════
+   EQUINOS
+══════════════════════════════════════════════ */
+.equinos{background:linear-gradient(135deg,#0a1a30,#112244);padding:90px 0;position:relative;overflow:hidden}
+.equinos::before{content:'';position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.02) 1px,transparent 1px);background-size:45px 45px}
+.equinos-inner{max-width:1280px;margin:0 auto;padding:0 2rem;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;position:relative;z-index:1}
+.equinos-visual{display:flex;flex-direction:column;gap:1rem}
+.eq-card{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:1.5rem;display:flex;align-items:center;gap:1rem}
+.eq-card-icon{font-size:36px;flex-shrink:0}
+.eq-card h4{font-family:'Barlow Condensed',sans-serif;font-size:17px;font-weight:700;color:var(--white);text-transform:uppercase;margin-bottom:3px}
+.eq-card p{font-size:13px;font-weight:300;color:rgba(255,255,255,.55);line-height:1.5}
+.eq-coming{background:rgba(242,158,31,.12);border:1px solid rgba(242,158,31,.3);border-radius:14px;padding:1.75rem;text-align:center;margin-top:.5rem}
+.eq-coming-date{font-family:'ConthraxSb','Exo 2','Barlow Condensed',sans-serif;font-size:36px;font-weight:900;color:var(--amber);margin-bottom:.375rem}
+.eq-coming-label{font-size:13px;color:rgba(255,255,255,.5)}
+
+/* ══════════════════════════════════════════════
+   CONTACT
+══════════════════════════════════════════════ */
+.ct{background:var(--off);padding:90px 0}
+.ct-inner{max-width:1280px;margin:0 auto;padding:0 2rem;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:start}
+.ci-list{margin-top:2rem;display:flex;flex-direction:column;gap:1.25rem}
+.ci{display:flex;gap:1rem;align-items:flex-start}
+.ci-ic{width:42px;height:42px;background:var(--navy);color:var(--white);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.ci h4{font-family:'Barlow',sans-serif;font-weight:600;color:var(--txt);font-size:14px;margin-bottom:2px}
+.ci p{font-size:13px;font-weight:300;color:var(--txt2)}
+.form-card{background:var(--white);border-radius:18px;padding:2.5rem;box-shadow:0 4px 24px rgba(10,37,96,.1)}
+.form-ttl{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:700;color:var(--txt);text-transform:uppercase;margin-bottom:1.5rem}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:1rem}
+.fg label{font-size:12.5px;font-weight:600;color:var(--txt)}
+.fg input,.fg select,.fg textarea{padding:11px 15px;border:1.5px solid var(--gl);border-radius:8px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:300;color:var(--txt);background:var(--off);transition:border-color .2s;outline:none}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--navy);background:var(--white)}
+.fg textarea{min-height:110px;resize:vertical}
+.btn-sub{width:100%;padding:14px;background:var(--navy);color:var(--white);border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Barlow',sans-serif;transition:all .25s}
+.btn-sub:hover{background:var(--navy-lt);transform:translateY(-2px);box-shadow:0 8px 24px rgba(10,37,96,.22)}
+
+/* ── CLOSING BANNER ── */
+.closing{background:var(--amber);padding:56px 0;text-align:center}
+.closing p{font-family:'ConthraxSb','Exo 2','Barlow Condensed',sans-serif;font-size:clamp(22px,3.5vw,44px);font-weight:900;color:var(--navy-dk);text-transform:uppercase;letter-spacing:2px}
+.closing p em{color:var(--white);font-style:normal}
+
+/* ── FOOTER ── */
+footer{background:var(--navy-dk);padding:60px 0 28px}
+.ft-inner{max-width:1280px;margin:0 auto;padding:0 2rem}
+.ft-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;padding-bottom:2.5rem;border-bottom:1px solid rgba(255,255,255,.07);margin-bottom:1.75rem}
+.ft-brand p{font-size:13px;font-weight:300;color:rgba(255,255,255,.4);line-height:1.72;margin-top:1rem;max-width:270px}
+.ft-col h4{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;color:var(--white);text-transform:uppercase;letter-spacing:2px;margin-bottom:.875rem}
+.ft-col ul{list-style:none;display:flex;flex-direction:column;gap:.45rem}
+.ft-col ul li a{font-size:13px;font-weight:300;color:rgba(255,255,255,.42);transition:color .2s}
+.ft-col ul li a:hover{color:var(--amber)}
+.ft-bot{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.75rem}
+.ft-copy{font-size:12px;font-weight:300;color:rgba(255,255,255,.25)}
+.socials{display:flex;gap:.625rem}
+.soc{width:34px;height:34px;background:rgba(255,255,255,.07);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;transition:background .2s;cursor:pointer}
+.soc:hover{background:var(--amber)}
+
+/* ── SHARED UTILS ── */
+.btn-primary{padding:14px 28px;background:var(--amber);color:var(--navy-dk);border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Barlow',sans-serif;transition:all .25s;display:inline-flex;align-items:center;gap:8px}
+.btn-primary:hover{background:var(--amber-lt);transform:translateY(-2px);box-shadow:0 8px 24px rgba(242,158,31,.32)}
+.btn-outline{padding:14px 28px;background:transparent;color:var(--white);border:1.5px solid rgba(255,255,255,.3);border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Barlow',sans-serif;transition:all .25s;display:inline-flex;align-items:center;gap:8px}
+.btn-outline:hover{border-color:var(--amber);color:var(--amber);transform:translateY(-2px)}
+
+/* ── FADE-IN ── */
+.fi{opacity:0;transform:translateY(22px);transition:opacity .6s ease,transform .6s ease}
+.fi.vis{opacity:1;transform:translateY(0)}
+.fi:nth-child(2){transition-delay:.1s}
+.fi:nth-child(3){transition-delay:.2s}
+.fi:nth-child(4){transition-delay:.3s}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px){
+  .hero-inner,.about-inner,.bovinos-inner,.equinos-inner,.ct-inner,.prod-intro-inner{grid-template-columns:1fr}
+  .hero-right{display:none}
+  .sw-steps{grid-template-columns:repeat(2,1fr)}
+  .grid3{grid-template-columns:repeat(2,1fr)}
+  .ft-top{grid-template-columns:1fr 1fr}
+}
+@media(max-width:768px){
+  .nav-links{display:none}
+  .sw-steps,.grid3{grid-template-columns:1fr}
+  .hero-paths{grid-template-columns:1fr}
+  .row2{grid-template-columns:1fr}
+  .ft-top{grid-template-columns:1fr}
+  .ft-bot{flex-direction:column;text-align:center}
+  .world-divider-inner{flex-direction:column;gap:1rem}
+  .world-div-line{display:none}
+}
+
+/* ═══════ BIOMECHANICS STUDIO EMBED ═══════ */
+.studio-embed{background:var(--navy-dk);padding:90px 0;position:relative;overflow:hidden}
+.studio-embed::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 85% 12%,rgba(242,158,31,.13),transparent 42%),linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:auto,56px 56px,56px 56px}
+.studio-inner{position:relative;z-index:1;max-width:1280px;margin:0 auto;padding:0 2rem}
+.studio-head{display:grid;grid-template-columns:1.05fr .95fr;gap:3rem;align-items:end;margin-bottom:2rem}
+.studio-kicker{font-size:11px;font-weight:800;letter-spacing:3px;text-transform:uppercase;color:var(--amber);margin-bottom:.8rem}
+.studio-title{font-family:'Barlow Condensed',sans-serif;font-size:clamp(32px,4vw,56px);font-weight:900;line-height:1.03;text-transform:uppercase;color:#fff;margin-bottom:1rem}
+.studio-copy{font-size:16px;font-weight:300;color:rgba(255,255,255,.68);line-height:1.75;max-width:620px}
+.studio-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem}
+.studio-chip{border:1px solid rgba(242,158,31,.25);background:rgba(255,255,255,.05);border-radius:14px;padding:1rem;color:rgba(255,255,255,.78);font-size:13px;font-weight:500}
+.studio-chip b{display:block;color:var(--amber);font-family:'Barlow Condensed',sans-serif;font-size:22px;margin-bottom:.25rem}
+.studio-frame-wrap{background:#fff;border:1px solid rgba(242,158,31,.35);border-radius:22px;padding:10px;box-shadow:0 28px 80px rgba(0,0,0,.35)}
+.studio-frame-bar{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:10px 14px 16px;color:var(--txt)}
+.studio-frame-title{font-weight:800;color:var(--navy-dk)}
+.studio-frame-actions{display:flex;gap:.75rem;flex-wrap:wrap}
+.studio-open{display:inline-flex;align-items:center;gap:8px;background:var(--amber);color:var(--navy-dk);border-radius:8px;padding:10px 16px;font-size:13px;font-weight:800;text-decoration:none;transition:all .2s}
+.studio-open:hover{background:var(--amber-lt);transform:translateY(-1px)}
+.studio-frame{width:100%;height:860px;border:0;border-radius:16px;background:#F5F7FB}
+.studio-offline{background:rgba(255,255,255,.06);border:1.5px dashed rgba(242,158,31,.35);border-radius:16px;padding:3.5rem 2rem;text-align:center;width:100%}
+.studio-offline-icon{font-size:52px;margin-bottom:1rem}
+.studio-offline h3{font-family:'Barlow Condensed',sans-serif;font-size:24px;font-weight:700;color:#fff;text-transform:uppercase;margin-bottom:.75rem}
+.studio-offline p{font-size:15px;font-weight:300;color:rgba(255,255,255,.62);line-height:1.7;max-width:500px;margin:0 auto}
+.studio-offline .btn-chk{display:inline-flex;align-items:center;gap:8px;background:var(--amber);color:var(--navy-dk);border:none;border-radius:8px;padding:12px 22px;font-size:14px;font-weight:800;cursor:pointer;margin-top:1.25rem;transition:all .2s}
+.studio-offline .btn-chk:hover{background:var(--amber-lt)}
+@media(max-width:900px){.studio-head{grid-template-columns:1fr}.studio-flow{grid-template-columns:1fr 1fr}.studio-frame{height:760px}}
+@media(max-width:560px){.studio-embed{padding:70px 0}.studio-inner{padding:0 1rem}.studio-flow{grid-template-columns:1fr}.studio-frame{height:720px}.studio-frame-bar{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     NAVBAR
+══════════════════════════════════════════════ -->
+<nav class="nav" id="navbar">
+  <div class="nav-wrap">
+
+    <!-- Logo -->
+    <a href="#inicio" class="logo-link">
+      <!-- Logo mark: perro corriendo con prótesis ámbar -->
+      <svg class="logo-mark" viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+        <!-- Fondo cuadrado redondeado navy -->
+        <rect width="90" height="90" rx="12" fill="#0A2560"/>
+        <!-- Símbolo ámbar: teardrop/pin con articulaciones (marca registrada Ache) -->
+        <ellipse cx="55" cy="40" rx="13" ry="16" fill="#F29E1F"/>
+        <circle cx="55" cy="32" r="6" fill="#0A2560" opacity=".6"/>
+        <circle cx="55" cy="32" r="3.5" fill="none" stroke="#0A2560" stroke-width="1.5"/>
+        <line x1="55" y1="41" x2="55" y2="50" stroke="#0A2560" stroke-width="2"/>
+        <circle cx="55" cy="53" r="3" fill="none" stroke="#0A2560" stroke-width="1.5"/>
+        <line x1="55" y1="56" x2="55" y2="62" stroke="#0A2560" stroke-width="1.5"/>
+        <circle cx="55" cy="64" r="2" fill="none" stroke="#0A2560" stroke-width="1.5"/>
+        <!-- Silueta perro (navy claro sobre navy oscuro) -->
+        <!-- cuerpo -->
+        <ellipse cx="38" cy="42" rx="18" ry="13" fill="#1a3a7a"/>
+        <!-- cabeza -->
+        <circle cx="54" cy="30" r="9" fill="#1a3a7a"/>
+        <!-- oreja -->
+        <path d="M57 22 L63 16 L60 26 Z" fill="#1a3a7a"/>
+        <!-- cola -->
+        <path d="M22 40 Q14 32 18 22" stroke="#1a3a7a" stroke-width="5" fill="none" stroke-linecap="round"/>
+        <!-- pata delantera -->
+        <path d="M28 53 L24 66 L30 68" stroke="#1a3a7a" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <!-- pata trasera izquierda -->
+        <path d="M44 55 L48 68 L43 70" stroke="#1a3a7a" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="logo-text-block">
+        <span class="logo-ache">ACHE</span>
+        <span class="logo-innovation">Innovation</span>
+      </div>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="#nosotros" data-es="Nosotros" data-en="About">Nosotros</a></li>
+      <li><a href="#mascotas-sw" data-es="Software IA" data-en="AI Software">Software IA</a></li>
+      <li><a href="#biomechanics-studio" data-es="Biomechanics Studio" data-en="Biomechanics Studio">Biomechanics Studio</a></li>
+      <li><a href="#mascotas-prod" class="nav-pill mascotas" data-es="Mascotas" data-en="Pets">Mascotas</a></li>
+      <li><a href="#prod-intro" class="nav-pill productivos" data-es="Animales Productivos" data-en="Productive Animals">Animales Productivos</a></li>
+      <li><a href="#contacto" data-es="Contacto" data-en="Contact">Contacto</a></li>
+    </ul>
+
+    <div class="nav-r">
+      <div class="lang">
+        <button class="lb on" onclick="setLang('es')">ES</button>
+        <button class="lb"    onclick="setLang('en')">EN</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ══════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════ -->
+<section class="hero" id="inicio">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-ring r1"></div>
+  <div class="hero-ring r2"></div>
+  <div class="hero-ring r3"></div>
+
+  <div class="hero-inner">
+    <!-- Left: text + paths -->
+    <div>
+      <div class="hero-eyebrow">
+        <div class="pulse"></div>
+        <span data-es="I+D · Fabricación Local · Validación en Campo" data-en="R&D · Local Manufacturing · Field Validation">I+D · Fabricación Local · Validación en Campo</span>
+      </div>
+
+      <h1 class="hero-h1">
+        <span data-es="Potenciamos la<br>movilidad <em>animal</em>" data-en="We enhance<br><em>animal</em> mobility">
+          Potenciamos la<br>movilidad <em>animal</em>
+        </span>
+      </h1>
+      <div class="hero-tagline" data-es="porque cada paso cuenta." data-en="because every step counts.">
+        porque cada paso cuenta.
+      </div>
+      <p class="hero-desc" data-es="Diseñamos y fabricamos dispositivos de asistencia en movilidad. Tecnología diferencial: IA, parametrización anatómica y materiales biomédicos." data-en="We design and manufacture mobility assistance devices. Differential technology: AI, anatomical parameterization and biomedical materials.">
+        Diseñamos y fabricamos dispositivos de asistencia en movilidad. Tecnología diferencial: IA, parametrización anatómica y materiales biomédicos.
+      </p>
+
+      <!-- Two paths -->
+      <div class="hero-paths">
+        <a href="#mascotas-sw" class="path-card pet">
+          <div class="path-icon">🐕</div>
+          <div class="path-title" data-es="Mascotas" data-en="Pets">Mascotas</div>
+          <div class="path-sub" data-es="Prótesis · Órtesis · Arneses · Carros ortopédicos · Botitas" data-en="Prosthetics · Orthoses · Harnesses · Orthopedic carts · Boots">Prótesis · Órtesis · Arneses · Carros ortopédicos · Botitas</div>
+          <div class="path-arrow" data-es="Ver soluciones →" data-en="See solutions →">Ver soluciones →</div>
+        </a>
+        <a href="#prod-intro" class="path-card prod">
+          <div class="path-icon">🐄 🐴</div>
+          <div class="path-title" data-es="Animales Productivos" data-en="Productive Animals">Animales Productivos</div>
+          <div class="path-sub" data-es="Podología bovina · Herradura equina · Soluciones de campo" data-en="Bovine podology · Equine horseshoe · Field solutions">Podología bovina · Herradura equina · Soluciones de campo</div>
+          <div class="path-arrow" data-es="Ver soluciones →" data-en="See solutions →">Ver soluciones →</div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Right: logo grande -->
+    <div class="hero-right">
+      <div class="hero-logo-wrap">
+        <!-- Logo grande recreado como SVG -->
+        <svg class="hero-logo-svg" viewBox="0 0 320 260" xmlns="http://www.w3.org/2000/svg">
+          <!-- Símbolo ámbar: teardrop con articulaciones (versión grande) -->
+          <ellipse cx="175" cy="118" rx="42" ry="55" fill="#F29E1F"/>
+          <!-- Círculos internos del pin (biomecánica) -->
+          <circle cx="175" cy="100" r="19" fill="rgba(10,37,96,0.55)"/>
+          <circle cx="175" cy="100" r="11" fill="none" stroke="#0A2560" stroke-width="3"/>
+          <line x1="175" y1="119" x2="175" y2="144" stroke="#0A2560" stroke-width="4"/>
+          <circle cx="175" cy="151" r="9" fill="none" stroke="#0A2560" stroke-width="3"/>
+          <line x1="175" y1="160" x2="175" y2="177" stroke="#0A2560" stroke-width="3"/>
+          <circle cx="175" cy="183" r="6" fill="none" stroke="#0A2560" stroke-width="2.5"/>
+
+          <!-- Perro corriendo (silueta navy) -->
+          <!-- cuerpo -->
+          <ellipse cx="120" cy="120" rx="58" ry="42" fill="#0A2560"/>
+          <!-- cabeza -->
+          <circle cx="172" cy="90" rx="28" ry="27" fill="#0A2560"/>
+          <!-- oreja punta -->
+          <path d="M182 68 L200 50 L192 78 Z" fill="#0A2560"/>
+          <!-- ojo (pequeño hueco claro) -->
+          <circle cx="180" cy="85" r="3" fill="#F5F7FB" opacity=".4"/>
+          <!-- cola arriba-izquierda -->
+          <path d="M65 112 Q40 90 52 65" stroke="#0A2560" stroke-width="16" fill="none" stroke-linecap="round"/>
+          <!-- pata delantera derecha (hacia adelante-abajo) -->
+          <path d="M82 155 L70 195 L85 200" stroke="#0A2560" stroke-width="17" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- pata delantera izquierda (recogida) -->
+          <path d="M108 158 L115 195 L100 200" stroke="#0A2560" stroke-width="14" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- pata trasera izquierda (hacia delante) -->
+          <path d="M145 158 L155 195 L140 200" stroke="#0A2560" stroke-width="14" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- pata trasera derecha: donde va la prótesis (el símbolo ámbar cubre esta zona) -->
+        </svg>
+
+        <!-- Texto del logo -->
+        <div class="hero-logo-brand">
+          <span class="hero-logo-ache">ACHE</span>
+          <span class="hero-logo-innovation">Innovation</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     NOSOTROS
+══════════════════════════════════════════════ -->
+<section class="about" id="nosotros">
+  <div class="about-inner">
+    <div class="fi">
+      <div class="sec-eyebrow" data-es="Quiénes somos" data-en="Who we are">Quiénes somos</div>
+      <h2 class="sec-h" data-es="I+D + prototipado rápido + fabricación local + validación en campo." data-en="R&D + rapid prototyping + local manufacturing + field validation.">
+        I+D + prototipado rápido + fabricación local + validación en campo.
+      </h2>
+      <p class="sec-p" data-es="Ache Innovation nació de la convicción de que la tecnología puede transformar la calidad de vida de los animales. Combinamos ingeniería, inteligencia artificial y bienestar animal para crear soluciones concretas que mejoran la movilidad de mascotas y animales productivos." data-en="Ache Innovation was born from the conviction that technology can transform the quality of life of animals. We combine engineering, artificial intelligence and animal welfare to create concrete solutions that improve the mobility of pets and productive animals.">
+        Ache Innovation nació de la convicción de que la tecnología puede transformar la calidad de vida de los animales. Combinamos ingeniería, inteligencia artificial y bienestar animal para crear soluciones concretas que mejoran la movilidad de mascotas y animales productivos.
+      </p>
+      <div class="formula-box">
+        <div class="formula-eq">
+          <em data-es="Ache" data-en="Ache">Ache</em>&nbsp;=&nbsp;
+          <span data-es="I+D + prototipado rápido + fabricación local + validación en campo" data-en="R&D + rapid prototyping + local manufacturing + field validation">I+D + prototipado rápido + fabricación local + validación en campo</span>
+        </div>
+      </div>
+    </div>
+    <div class="fi">
+      <div class="sec-eyebrow" data-es="Nuestros valores" data-en="Our values">Nuestros valores</div>
+      <h2 class="sec-h" data-es="Personas que aman<br>lo que hacen." data-en="People who love<br>what they do.">Personas que aman<br>lo que hacen.</h2>
+      <div class="vals-grid">
+        <div class="val"><h4 data-es="Innovación" data-en="Innovation">Innovación</h4><p data-es="Tecnología de punta al servicio del bienestar animal." data-en="Cutting-edge technology at the service of animal welfare.">Tecnología de punta al servicio del bienestar animal.</p></div>
+        <div class="val"><h4 data-es="Excelencia" data-en="Excellence">Excelencia</h4><p data-es="Diseño y fabricación de la más alta calidad." data-en="Design and manufacturing of the highest quality.">Diseño y fabricación de la más alta calidad.</p></div>
+        <div class="val"><h4 data-es="Respeto" data-en="Respect">Respeto</h4><p data-es="Cada animal merece dignidad y movilidad." data-en="Every animal deserves dignity and mobility.">Cada animal merece dignidad y movilidad.</p></div>
+        <div class="val"><h4 data-es="Honestidad" data-en="Honesty">Honestidad</h4><p data-es="Transparencia y confianza en cada proceso." data-en="Transparency and trust in every process.">Transparencia y confianza en cada proceso.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     ──── MUNDO: MASCOTAS ────
+══════════════════════════════════════════════ -->
+<div class="world-divider mascotas-div" id="mascotas">
+  <div class="world-divider-inner">
+    <div class="world-div-label">
+      <div class="world-div-icon">🐕</div>
+      <div class="world-div-text">
+        <div class="world-div-title" data-es="Mascotas" data-en="Pets">Mascotas</div>
+        <div class="world-div-sub" data-es="Prótesis · Órtesis · Arneses · Carros ortopédicos · Botitas · Pegatinas" data-en="Prosthetics · Orthoses · Harnesses · Orthopedic carts · Boots · Paw pads">Prótesis · Órtesis · Arneses · Carros ortopédicos · Botitas · Pegatinas</div>
+      </div>
+    </div>
+    <div class="world-div-line"></div>
+  </div>
+</div>
+
+
+<!-- SOFTWARE IA ─────────────────────────────── -->
+<section class="sw" id="mascotas-sw">
+  <div class="sw-hd fi">
+    <div class="sec-eyebrow" data-es="Tecnología diferencial" data-en="Differential technology">Tecnología diferencial</div>
+    <h2 class="sec-h wh" data-es="Parametrización morfológica<br>con inteligencia artificial" data-en="Morphological parameterization<br>with artificial intelligence">
+      Parametrización morfológica<br>con inteligencia artificial
+    </h2>
+    <p class="sec-p wh" style="margin:.875rem auto 0" data-es="El primer software que detecta la raza por foto, calibra escala real con marcadores ArUco, mide el muñón y genera el diseño 3D de la prótesis junto con un reporte clínico PDF." data-en="The first software that detects breed by photo, calibrates real scale with ArUco markers, measures the stump and generates the 3D prosthetic design together with a clinical PDF report.">
+      El primer software que detecta la raza por foto, calibra escala real con marcadores ArUco, mide el muñón y genera el diseño 3D de la prótesis junto con un reporte clínico PDF.
+    </p>
+  </div>
+  <div class="sw-steps">
+    <div class="step fi">
+      <div class="step-ic">📸<div class="step-n">1</div></div>
+      <div class="step-t" data-es="Foto + ArUco" data-en="Photo + ArUco">Foto + ArUco</div>
+      <div class="step-d" data-es="Fotografiá al paciente con un marcador ArUco impreso (5×5 cm). El sistema calibra la escala en mm/px automáticamente." data-en="Photograph the patient with a printed ArUco marker (5×5 cm). The system calibrates the scale in mm/px automatically.">Fotografiá al paciente con un marcador ArUco impreso (5×5 cm). El sistema calibra la escala en mm/px automáticamente.</div>
+    </div>
+    <div class="step fi">
+      <div class="step-ic">🤖<div class="step-n">2</div></div>
+      <div class="step-t" data-es="Detección de raza" data-en="Breed detection">Detección de raza</div>
+      <div class="step-d" data-es="IA identifica la raza (40+ en DB con estándares FCI/AKC/KC) y carga automáticamente los parámetros morfológicos de referencia." data-en="AI identifies the breed (40+ in DB with FCI/AKC/KC standards) and automatically loads reference morphological parameters.">IA identifica la raza (40+ en DB con estándares FCI/AKC/KC) y carga automáticamente los parámetros morfológicos de referencia.</div>
+    </div>
+    <div class="step fi">
+      <div class="step-ic">📐<div class="step-n">3</div></div>
+      <div class="step-t" data-es="Medición del muñón" data-en="Stump measurement">Medición del muñón</div>
+      <div class="step-d" data-es="Calcula largo, circunferencia basal y distal del muñón en cm reales. Genera especificaciones: socket, eje, profundidad y material." data-en="Calculates stump length, basal and distal circumference in real cm. Generates specs: socket, shaft, depth and material.">Calcula largo, circunferencia basal y distal del muñón en cm reales. Genera especificaciones: socket, eje, profundidad y material.</div>
+    </div>
+    <div class="step fi">
+      <div class="step-ic">📄<div class="step-n">4</div></div>
+      <div class="step-t" data-es="Reporte + impresión" data-en="Report + printing">Reporte + impresión</div>
+      <div class="step-d" data-es="Reporte PDF clínico con guía quirúrgica (nivel de corte, muñón, cicatrización). Archivo 3D enviado directo a impresora." data-en="Clinical PDF report with surgical guide (cut level, stump, healing). 3D file sent directly to printer.">Reporte PDF clínico con guía quirúrgica (nivel de corte, muñón, cicatrización). Archivo 3D enviado directo a impresora.</div>
+    </div>
+  </div>
+  <div class="sw-tech fi">
+    <div class="tech-pill"><strong>OpenCV + ArUco</strong>Calibración real mm/px</div>
+    <div class="tech-pill"><strong>40+ Razas</strong>FCI / AKC / KC</div>
+    <div class="tech-pill"><strong>ReportLab PDF</strong>Reporte clínico</div>
+    <div class="tech-pill"><strong>Streamlit</strong>Interfaz web</div>
+    <div class="tech-pill"><strong>OpenSCAD</strong>Diseño 3D paramétrico</div>
+  </div>
+  <div class="sw-cta fi">
+    <p data-es="¿Veterinario o clínica? Consultá por acceso profesional al sistema." data-en="Veterinarian or clinic? Ask about professional system access.">¿Veterinario o clínica? Consultá por acceso profesional al sistema.</p>
+    <a href="#contacto" class="btn-primary" data-es="💬 Solicitar Demo" data-en="💬 Request Demo">💬 Solicitar Demo</a>
+  </div>
+</section>
+
+
+<!-- ═════════════════════════ BIOMECHANICS STUDIO FUNCIONAL ═════════════════════════ -->
+<section class="studio-embed" id="biomechanics-studio">
+  <div class="studio-inner">
+    <div class="studio-head">
+      <div>
+        <div class="studio-kicker" data-es="Software clínico-protésico" data-en="Clinical-prosthetic software">Software clínico-protésico</div>
+        <h2 class="studio-title" data-es="Biomechanics Studio<br>integrado" data-en="Integrated<br>Biomechanics Studio">Biomechanics Studio<br>integrado</h2>
+        <p class="studio-copy" data-es="Herramienta funcional para crear casos, cargar imágenes, analizar morfología, parametrizar una prótesis externa, generar CAD/STL conceptual y emitir reportes para revisión profesional." data-en="Functional tool to create cases, upload images, analyze morphology, parameterize an external prosthesis, generate conceptual CAD/STL and issue reports for professional review.">Herramienta funcional para crear casos, cargar imágenes, analizar morfología, parametrizar una prótesis externa, generar CAD/STL conceptual y emitir reportes para revisión profesional.</p>
+      </div>
+      <div class="studio-flow">
+        <div class="studio-chip"><b>01</b><span data-es="Crear caso" data-en="Create case">Crear caso</span></div>
+        <div class="studio-chip"><b>02</b><span data-es="Fotos y análisis" data-en="Photos & analysis">Fotos y análisis</span></div>
+        <div class="studio-chip"><b>03</b><span data-es="Diseño 3D" data-en="3D design">Diseño 3D</span></div>
+        <div class="studio-chip"><b>04</b><span data-es="Reporte PDF" data-en="PDF Report">Reporte PDF</span></div>
+      </div>
+    </div>
+    <div class="studio-frame-wrap">
+      <div class="studio-frame-bar">
+        <div>
+          <div class="studio-frame-title" data-es="Módulo operativo — Ache Biomechanics Studio" data-en="Operational module — Ache Biomechanics Studio">Módulo operativo — Ache Biomechanics Studio</div>
+          <div style="font-size:12px;color:#8896B0;margin-top:3px" data-es="Parametrización morfológica canina con IA · ArUco · OpenSCAD" data-en="Canine morphological parameterization with AI · ArUco · OpenSCAD">Parametrización morfológica canina con IA · ArUco · OpenSCAD</div>
+        </div>
+        <div class="studio-frame-actions">
+          <a class="studio-open" id="studio-fullscreen-link" href="http://localhost:8502" target="_blank" rel="noopener" data-es="Abrir en pantalla completa ↗" data-en="Open full screen ↗">Abrir en pantalla completa ↗</a>
+        </div>
+      </div>
+      <!-- Placeholder cuando el studio no está corriendo -->
+      <div class="studio-offline" id="studio-offline">
+        <div class="studio-offline-icon">🐾</div>
+        <h3 data-es="Studio no iniciado" data-en="Studio not started">Studio no iniciado</h3>
+        <p data-es="Ejecutá <strong>INICIAR_APP_ACHE.command</strong> y esperá unos segundos — la conexión se detecta automáticamente." data-en="Run <strong>INICIAR_APP_ACHE.command</strong> and wait a few seconds — connection is detected automatically.">Ejecutá <strong>INICIAR_APP_ACHE.command</strong> y esperá unos segundos — la conexión se detecta automáticamente.</p>
+        <button onclick="checkStudio()" class="btn-chk" data-es="🔄 Verificar ahora" data-en="🔄 Check now">🔄 Verificar ahora</button>
+        <details style="margin-top:1.5rem;text-align:left">
+          <summary style="cursor:pointer;font-size:13px;color:rgba(255,255,255,.45);font-weight:600;letter-spacing:.5px" data-es="▸ Usar URL de túnel (para demos remotas)" data-en="▸ Use tunnel URL (for remote demos)">▸ Usar URL de túnel (para demos remotas)</summary>
+          <div style="margin-top:.75rem;display:flex;gap:.5rem;flex-wrap:wrap">
+            <input id="studio-url-input" type="url" placeholder="https://xxxx.trycloudflare.com"
+              style="flex:1;min-width:240px;padding:10px 14px;border-radius:8px;border:1px solid rgba(242,158,31,.4);background:rgba(255,255,255,.08);color:#fff;font-size:13px;outline:none"
+              oninput="this.style.borderColor=this.value?'#F29E1F':'rgba(242,158,31,.4)'"
+            />
+            <button onclick="setStudioUrl()" class="btn-chk" style="margin-top:0" data-es="Conectar" data-en="Connect">Conectar</button>
+            <button onclick="document.getElementById('studio-url-input').value='';setStudioUrl()" class="btn-chk" style="margin-top:0;background:rgba(255,255,255,.12);color:#fff" data-es="Reset local" data-en="Reset local">Reset local</button>
+          </div>
+        </details>
+      </div>
+      <iframe class="studio-frame" id="studio-iframe" src="" title="Ache Biomechanics Studio" style="display:none" allow="camera;microphone"></iframe>
+    </div>
+  </div>
+</section>
+
+
+<!-- PRODUCTOS MASCOTAS ────────────────────── -->
+<section class="mkt-pet" id="mascotas-prod">
+  <div class="mkt-hd fi">
+    <div>
+      <div class="sec-eyebrow" data-es="Catálogo · Mascotas" data-en="Catalog · Pets">Catálogo · Mascotas</div>
+      <h2 class="sec-h" data-es="Todo para la movilidad<br>de tu mascota" data-en="Everything for your<br>pet's mobility">Todo para la movilidad<br>de tu mascota</h2>
+    </div>
+    <a href="#contacto" class="btn-primary" data-es="Consultar catálogo →" data-en="Request catalog →">Consultar catálogo →</a>
+  </div>
+
+  <div class="tabs fi">
+    <button class="tab on" onclick="filterP(this,'all')"     data-es="Todos"          data-en="All">Todos</button>
+    <button class="tab"    onclick="filterP(this,'rehab')"   data-es="Rehabilitación" data-en="Rehabilitation">Rehabilitación</button>
+    <button class="tab"    onclick="filterP(this,'movil')"   data-es="Movilidad"      data-en="Mobility">Movilidad</button>
+    <button class="tab"    onclick="filterP(this,'protect')" data-es="Protección"     data-en="Protection">Protección</button>
+    <button class="tab"    onclick="filterP(this,'custom')"  data-es="A medida"       data-en="Custom">A medida</button>
+  </div>
+
+  <div class="grid3" id="petGrid">
+
+    <!-- Arnés rehabilitación -->
+    <div class="pc fi" data-cat="rehab">
+      <div class="pc-img" style="background:#0A2560;flex-direction:column;gap:.5rem">
+        <span style="font-size:52px">🦮</span>
+        <span style="font-size:10px;font-weight:700;color:#F29E1F;letter-spacing:2px;text-transform:uppercase" data-es="Producto terminado" data-en="Finished product">Producto terminado</span>
+        <div class="bdg bdg-a" data-es="Abr 2026 ✓" data-en="Apr 2026 ✓">Abr 2026 ✓</div>
+      </div>
+      <div class="pc-body">
+        <div class="pc-cat" data-es="Rehabilitación" data-en="Rehabilitation">Rehabilitación</div>
+        <div class="pc-name" data-es="Arnés de Rehabilitación Ache" data-en="Ache Rehabilitation Harness">Arnés de Rehabilitación Ache</div>
+        <div class="pc-desc" data-es="Arnés ergonómico con asas anterior y posterior. Diseño veterinario de vanguardia con logotipo bordado. Ideal para post-quirúrgico y displasia de cadera. Tallas S–XL." data-en="Ergonomic harness with front and rear handles. Cutting-edge veterinary design with embroidered logo. Ideal for post-surgical and hip dysplasia. Sizes S–XL.">Arnés ergonómico con asas anterior y posterior. Diseño veterinario de vanguardia con logotipo bordado. Ideal para post-quirúrgico y displasia de cadera. Tallas S–XL.</div>
+        <div class="pc-foot">
+          <div class="pc-price">$28.500 <small>ARS</small></div>
+          <button class="btn-cart" data-es="Agregar" data-en="Add">Agregar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carro ortopédico -->
+    <div class="pc fi" data-cat="movil">
+      <div class="pc-img" style="background:linear-gradient(135deg,#e8edf5,#d0daea)">
+        🦼
+        <div class="bdg bdg-n" data-es="Best Seller" data-en="Best Seller">Best Seller</div>
+      </div>
+      <div class="pc-body">
+        <div class="pc-cat" data-es="Movilidad" data-en="Mobility">Movilidad</div>
+        <div class="pc-name" data-es="Carro Ortopédico Ajustable" data-en="Adjustable Orthopedic Cart">Carro Ortopédico Ajustable</div>
+        <div class="pc-desc" data-es="Silla de ruedas en aluminio aeronáutico para perros con movilidad reducida. Ajuste de altura y ancho. Tela de alta durabilidad. Tallas S, M, L y XL." data-en="Aeronautical aluminum wheelchair for dogs with reduced mobility. Height and width adjustment. High-durability fabric. Sizes S, M, L and XL.">Silla de ruedas en aluminio aeronáutico para perros con movilidad reducida. Ajuste de altura y ancho. Tela de alta durabilidad. Tallas S, M, L y XL.</div>
+        <div class="pc-foot">
+          <div class="pc-price">$89.900 <small>ARS</small></div>
+          <button class="btn-cart" data-es="Agregar" data-en="Add">Agregar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Órtesis -->
+    <div class="pc fi" data-cat="rehab custom">
+      <div class="pc-img" style="background:linear-gradient(135deg,#f3e5f5,#e1bee7)">
+        🦴
+        <div class="bdg bdg-a" data-es="Con IA" data-en="With AI">Con IA</div>
+      </div>
+      <div class="pc-body">
+        <div class="pc-cat" data-es="Órtesis" data-en="Orthosis">Órtesis</div>
+        <div class="pc-name" data-es="Órtesis Carpo / Tarso" data-en="Carpal / Tarsal Orthosis">Órtesis Carpo / Tarso</div>
+        <div class="pc-desc" data-es="Órtesis rígida-flexible para soporte articular. Polímero biocompatible + velcro médico. Diseño generado por el software de parametrización morfológica." data-en="Rigid-flexible orthosis for joint support. Biocompatible polymer + medical velcro. Design generated by the morphological parameterization software.">Órtesis rígida-flexible para soporte articular. Polímero biocompatible + velcro médico. Diseño generado por el software de parametrización morfológica.</div>
+        <div class="pc-foot">
+          <div class="pc-price">$34.500 <small>ARS</small></div>
+          <button class="btn-cart" data-es="Agregar" data-en="Add">Agregar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botitas -->
+    <div class="pc fi" data-cat="protect">
+      <div class="pc-img" style="background:linear-gradient(135deg,#fff8e1,#ffecb3)">
+        🥾
+        <div class="bdg bdg-a" data-es="Nuevo" data-en="New">Nuevo</div>
+      </div>
+      <div class="pc-body">
+        <div class="pc-cat" data-es="Protección" data-en="Protection">Protección</div>
+        <div class="pc-name" data-es="Botitas Protectoras" data-en="Protective Boots">Botitas Protectoras</div>
+        <div class="pc-desc" data-es="Pack x4 botitas impermeables con suela antideslizante. Protegen almohadillas en superficies frías, calientes o abrasivas. Tallas 1 a 8." data-en="Pack of 4 waterproof boots with non-slip sole. Protect paw pads on cold, hot or abrasive surfaces. Sizes 1 to 8.">Pack x4 botitas impermeables con suela antideslizante. Protegen almohadillas en superficies frías, calientes o abrasivas. Tallas 1 a 8.</div>
+        <div class="pc-foot">
+          <div class="pc-price">$18.900 <small>ARS</small></div>
+          <button class="btn-cart" data-es="Agregar" data-en="Add">Agregar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pegatinas -->
+    <div class="pc fi" data-cat="protect">
+      <div class="pc-img" style="background:linear-gradient(135deg,#e3f2fd,#bbdefb)">🐾</div>
+      <div class="pc-body">
+        <div class="pc-cat" data-es="Protección" data-en="Protection">Protección</div>
+        <div class="pc-name" data-es="Pegatinas Antideslizantes" data-en="Anti-Slip Paw Pads">Pegatinas Antideslizantes</div>
+        <div class="pc-desc" data-es="Adhesivos de silicona para almohadillas. Evitan resbalones en madera, mármol y cerámica. Pack x24 reutilizables." data-en="Silicone adhesives for paw pads. Prevent slipping on wood, marble and ceramic. Pack of 24 reusable units.">Adhesivos de silicona para almohadillas. Evitan resbalones en madera, mármol y cerámica. Pack x24 reutilizables.</div>
+        <div class="pc-foot">
+          <div class="pc-price">$9.900 <small>ARS</small></div>
+          <button class="btn-cart" data-es="Agregar" data-en="Add">Agregar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Prótesis 3D — featured -->
+    <div class="pc feat fi" data-cat="custom movil">
+      <div class="pc-img" style="font-size:70px">
+        🦿
+        <div class="bdg bdg-a" data-es="Software IA" data-en="AI Software">Software IA</div>
+      </div>
+      <div class="pc-body">
+        <div class="pc-cat" data-es="Prótesis 3D · A medida" data-en="3D Prosthetics · Custom">Prótesis 3D · A medida</div>
+        <div class="pc-name" data-es="Prótesis 3D Personalizada" data-en="Custom 3D Prosthesis">Prótesis 3D Personalizada</div>
+        <div class="pc-desc" data-es="Fabricada con nuestro software IA: detección de raza (40+ razas), medición de muñón con ArUco, especificaciones de socket y eje, impresión 3D inmediata. Incluye reporte clínico PDF." data-en="Made with our AI software: breed detection (40+ breeds), stump measurement with ArUco, socket and shaft specs, immediate 3D printing. Includes clinical PDF report.">Fabricada con nuestro software IA: detección de raza (40+ razas), medición de muñón con ArUco, especificaciones de socket y eje, impresión 3D inmediata. Incluye reporte clínico PDF.</div>
+        <div class="pc-foot">
+          <div class="pc-price" style="font-size:17px">Desde $180.000 <small>ARS</small></div>
+          <button class="btn-cart" data-es="Consultar" data-en="Inquire">Consultar</button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /grid3 -->
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     ──── MUNDO: ANIMALES PRODUCTIVOS ────
+══════════════════════════════════════════════ -->
+<div class="world-divider productivos-div" id="prod-intro">
+  <div class="world-divider-inner">
+    <div class="world-div-label">
+      <div class="world-div-icon">🐄</div>
+      <div class="world-div-text">
+        <div class="world-div-title" data-es="Animales Productivos" data-en="Productive Animals">Animales Productivos</div>
+        <div class="world-div-sub" data-es="Bovinos · Equinos · Soluciones de campo con impacto económico real" data-en="Cattle · Equine · Field solutions with real economic impact">Bovinos · Equinos · Soluciones de campo con impacto económico real</div>
+      </div>
+    </div>
+    <div class="world-div-line"></div>
+  </div>
+</div>
+
+
+<!-- INTRO + STATS PRODUCTIVOS ────────────── -->
+<section class="prod-intro">
+  <div class="prod-intro-inner">
+    <div class="fi">
+      <div class="prod-sec-eyebrow" data-es="El problema que resolvemos" data-en="The problem we solve">El problema que resolvemos</div>
+      <h2 class="sec-h wh" data-es="Ache mide lo que<br>otros no ven." data-en="Ache measures what<br>others don't see.">Ache mide lo que<br>otros no ven.</h2>
+      <p class="sec-p wh" data-es="Las cojeras en bovinos y las lesiones en equinos tienen un impacto económico enorme que habitualmente se subestima. Ache lleva la tecnología al campo." data-en="Lameness in cattle and injuries in horses have a huge economic impact that is usually underestimated. Ache brings technology to the field.">Las cojeras en bovinos y las lesiones en equinos tienen un impacto económico enorme que habitualmente se subestima. Ache lleva la tecnología al campo.</p>
+      <div class="prod-formula">
+        <p data-es="<strong>95,7%</strong> de las vacas en producción Argentina están en la Cuenca Central.<br>Benchmark Europa: <strong>€450–500</strong> por caso clínico bovino (leche + reproducción + tratamiento).<br><em>Fuente: Lazzarini et al., 2024 — Tambos Argentina</em>" data-en="<strong>95.7%</strong> of Argentine dairy cows are in the Central Basin.<br>European benchmark: <strong>€450–500</strong> per bovine clinical case (milk + reproduction + treatment).<br><em>Source: Lazzarini et al., 2024 — Argentine dairy farms</em>">
+          <strong>95,7%</strong> de las vacas en producción Argentina están en la Cuenca Central.<br>Benchmark Europa: <strong>€450–500</strong> por caso clínico bovino (leche + reproducción + tratamiento).<br><em>Fuente: Lazzarini et al., 2024 — Tambos Argentina</em>
+        </p>
+      </div>
+    </div>
+    <div class="fi">
+      <div class="mkt-stats-grid">
+        <div class="mstat">
+          <div class="mstat-icon">🐄</div>
+          <div>
+            <div class="mstat-num">7,06%</div>
+            <div class="mstat-desc" data-es="vacas cojas x tambo detectadas por scoring entrenado vs 2,24% estimado por encargado" data-en="lame cows per farm detected by trained scoring vs 2.24% estimated by farm manager">vacas cojas x tambo detectadas por scoring entrenado vs 2,24% estimado por encargado</div>
+            <div class="mstat-source">Lazzarini et al., 2024</div>
+          </div>
+        </div>
+        <div class="mstat">
+          <div class="mstat-icon">🐕</div>
+          <div>
+            <div class="mstat-num">~20%</div>
+            <div class="mstat-desc" data-es="de perros con osteoartritis reportada — lesiones de movilidad en mascotas" data-en="of dogs with reported osteoarthritis — mobility injuries in pets">de perros con osteoartritis reportada — lesiones de movilidad en mascotas</div>
+            <div class="mstat-source" data-es="Estudios de bienestar animal canino" data-en="Canine welfare studies">Estudios de bienestar animal canino</div>
+          </div>
+        </div>
+        <div class="mstat">
+          <div class="mstat-icon">🐴</div>
+          <div>
+            <div class="mstat-num">1,16–2,36</div>
+            <div class="mstat-desc" data-es="lesiones musculo-esqueléticas por 1.000 largadas en caballos de carrera" data-en="musculoskeletal injuries per 1,000 race starts in racehorses">lesiones musculo-esqueléticas por 1.000 largadas en caballos de carrera</div>
+            <div class="mstat-source" data-es="Datos hipódromo argentino" data-en="Argentine racetrack data">Datos hipódromo argentino</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- BOVINOS ──────────────────────────────── -->
+<section class="bovinos" id="bovinos">
+  <div class="bovinos-inner">
+    <div class="fi">
+      <div class="sec-eyebrow" style="color:#27ae60" data-es="Bovinos · Lanzamiento Jul 2026" data-en="Cattle · Launch Jul 2026">Bovinos · Lanzamiento Jul 2026</div>
+      <h2 class="sec-h" data-es="Sistema podológico<br>para tambos" data-en="Podology system<br>for dairy farms">Sistema podológico<br>para tambos</h2>
+      <p class="sec-p" data-es="Solución integral para la detección y tratamiento de vacas cojas en rodeos lecheros. Diseño modular industrial pensado para las condiciones de campo argentino." data-en="Comprehensive solution for the detection and treatment of lame cows in dairy herds. Industrial modular design adapted to Argentine field conditions.">Solución integral para la detección y tratamiento de vacas cojas en rodeos lecheros. Diseño modular industrial pensado para las condiciones de campo argentino.</p>
+      <div class="bovinos-card-features" style="margin-top:2rem">
+        <div class="bfeat" data-es="Taco ortopédico para recuperación de miembros posteriores" data-en="Orthopedic block for hind limb recovery">Taco ortopédico para recuperación de miembros posteriores</div>
+        <div class="bfeat" data-es="Adhesivo biomédico Technovit — resistente a condiciones de campo" data-en="Technovit biomedical adhesive — resistant to field conditions">Adhesivo biomédico Technovit — resistente a condiciones de campo</div>
+        <div class="bfeat" data-es="Sistema de scoring de movilidad para detección temprana" data-en="Mobility scoring system for early detection">Sistema de scoring de movilidad para detección temprana</div>
+        <div class="bfeat" data-es="Compatible con regulaciones SENASA Argentina" data-en="Compatible with SENASA Argentina regulations">Compatible con regulaciones SENASA Argentina</div>
+        <div class="bfeat" data-es="Protocolo de pediluvio y manejo sanitario del rodeo" data-en="Footbath protocol and herd health management">Protocolo de pediluvio y manejo sanitario del rodeo</div>
+      </div>
+    </div>
+    <div class="fi">
+      <div class="bovinos-card">
+        <div class="bovinos-card-img">
+          🐄
+          <div class="coming-badge" data-es="Jul 2026" data-en="Jul 2026">Jul 2026</div>
+        </div>
+        <div class="bovinos-card-body">
+          <h3 data-es="Kit Podológico Bovino Ache" data-en="Ache Bovine Podology Kit">Kit Podológico Bovino Ache</h3>
+          <p data-es="Kit completo para el manejo de cojeras en tambos: taco ortopédico + Technovit + protocolo de aplicación + guía de scoring. Primer prototipo listo en Julio 2026." data-en="Complete kit for lameness management in dairy farms: orthopedic block + Technovit + application protocol + scoring guide. First prototype ready in July 2026.">Kit completo para el manejo de cojeras en tambos: taco ortopédico + Technovit + protocolo de aplicación + guía de scoring. Primer prototipo listo en Julio 2026.</p>
+          <a href="#contacto" class="btn-primary" style="display:inline-flex" data-es="Avisarme del lanzamiento →" data-en="Notify me of launch →">Avisarme del lanzamiento →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- EQUINOS ──────────────────────────────── -->
+<section class="equinos" id="equinos">
+  <div class="equinos-inner">
+    <div class="fi">
+      <div class="prod-sec-eyebrow" data-es="Equinos · Lanzamiento Dic 2026" data-en="Equine · Launch Dec 2026">Equinos · Lanzamiento Dic 2026</div>
+      <h2 class="sec-h wh" data-es="Herradura de<br>recuperación equina" data-en="Equine recovery<br>horseshoe">Herradura de<br>recuperación equina</h2>
+      <p class="sec-p wh" data-es="Diseño modular industrial para la recuperación de lesiones musculo-esqueléticas en caballos de carrera y trabajo. Materiales biomédicos, adaptable a distintas morfologías." data-en="Industrial modular design for recovery from musculoskeletal injuries in racehorses and working horses. Biomedical materials, adaptable to different morphologies.">Diseño modular industrial para la recuperación de lesiones musculo-esqueléticas en caballos de carrera y trabajo. Materiales biomédicos, adaptable a distintas morfologías.</p>
+      <div style="margin-top:2rem">
+        <a href="#contacto" class="btn-outline" data-es="Registrar interés →" data-en="Register interest →">Registrar interés →</a>
+      </div>
+    </div>
+    <div class="fi">
+      <div class="equinos-visual">
+        <div class="eq-card">
+          <div class="eq-card-icon">🦴</div>
+          <div>
+            <h4 data-es="Lesiones músculo-esqueléticas" data-en="Musculoskeletal injuries">Lesiones músculo-esqueléticas</h4>
+            <p data-es="1,16 a 2,36 lesiones por 1.000 largadas. Alto impacto económico y en bienestar animal." data-en="1.16 to 2.36 injuries per 1,000 starts. High economic and animal welfare impact.">1,16 a 2,36 lesiones por 1.000 largadas. Alto impacto económico y en bienestar animal.</p>
+          </div>
+        </div>
+        <div class="eq-card">
+          <div class="eq-card-icon">🔧</div>
+          <div>
+            <h4 data-es="Diseño modular industrial" data-en="Industrial modular design">Diseño modular industrial</h4>
+            <p data-es="Adaptable a distintas morfologías. Materiales biomédicos de alta resistencia al desgaste." data-en="Adaptable to different morphologies. High wear-resistant biomedical materials.">Adaptable a distintas morfologías. Materiales biomédicos de alta resistencia al desgaste.</p>
+          </div>
+        </div>
+        <div class="eq-card">
+          <div class="eq-card-icon">⚕️</div>
+          <div>
+            <h4 data-es="Validación clínica veterinaria" data-en="Veterinary clinical validation">Validación clínica veterinaria</h4>
+            <p data-es="Desarrollado junto a veterinarios especializados en medicina equina y deporte." data-en="Developed together with veterinarians specialized in equine medicine and sport.">Desarrollado junto a veterinarios especializados en medicina equina y deporte.</p>
+          </div>
+        </div>
+        <div class="eq-coming">
+          <div class="eq-coming-date">Dic 2026</div>
+          <div class="eq-coming-label" data-es="Prototipo terminado" data-en="Prototype finished">Prototipo terminado</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     CONTACTO
+══════════════════════════════════════════════ -->
+<section class="ct" id="contacto">
+  <div class="ct-inner">
+    <div class="fi">
+      <div class="sec-eyebrow" data-es="Hablemos" data-en="Let's talk">Hablemos</div>
+      <h2 class="sec-h" data-es="¿Listo para dar<br>el primer paso?" data-en="Ready to take<br>the first step?">¿Listo para dar<br>el primer paso?</h2>
+      <p class="sec-p" data-es="Dueños de mascotas, veterinarios, productores lecheros y criaderos de caballos — tenemos la solución para cada especie." data-en="Pet owners, veterinarians, dairy farmers and horse breeders — we have the solution for every species.">Dueños de mascotas, veterinarios, productores lecheros y criaderos de caballos — tenemos la solución para cada especie.</p>
+      <div class="ci-list">
+        <div class="ci"><div class="ci-ic">📍</div><div><h4 data-es="Ubicación" data-en="Location">Ubicación</h4><p>Monte Castro 546, CABA, Argentina</p></div></div>
+        <div class="ci"><div class="ci-ic">📱</div><div><h4>WhatsApp</h4><p>+54 11 XXXX-XXXX</p></div></div>
+        <div class="ci"><div class="ci-ic">📧</div><div><h4>Email</h4><p>hola@acheinnovation.com</p></div></div>
+        <div class="ci"><div class="ci-ic">📸</div><div><h4>Instagram</h4><p>@ache.innovation</p></div></div>
+      </div>
+    </div>
+    <div class="fi">
+      <div class="form-card">
+        <div class="form-ttl" data-es="Envianos un mensaje" data-en="Send us a message">Envianos un mensaje</div>
+        <div class="row2">
+          <div class="fg"><label data-es="Nombre" data-en="Name">Nombre</label><input type="text" placeholder="Tu nombre"></div>
+          <div class="fg"><label>Email</label><input type="email" placeholder="tu@email.com"></div>
+        </div>
+        <div class="fg">
+          <label data-es="Tipo de consulta" data-en="Query type">Tipo de consulta</label>
+          <select>
+            <option data-es="Seleccionar..." data-en="Select...">Seleccionar...</option>
+            <option data-es="── MASCOTAS ──" data-en="── PETS ──">── MASCOTAS ──</option>
+            <option data-es="Arnés de rehabilitación canino" data-en="Canine rehabilitation harness">Arnés de rehabilitación canino</option>
+            <option data-es="Carro ortopédico / silla de ruedas" data-en="Orthopedic cart / wheelchair">Carro ortopédico / silla de ruedas</option>
+            <option data-es="Prótesis 3D con software IA" data-en="3D Prosthesis with AI software">Prótesis 3D con software IA</option>
+            <option data-es="Órtesis canina" data-en="Canine orthosis">Órtesis canina</option>
+            <option data-es="Demo del software IA" data-en="AI software demo">Demo del software IA</option>
+            <option data-es="── ANIMALES PRODUCTIVOS ──" data-en="── PRODUCTIVE ANIMALS ──">── ANIMALES PRODUCTIVOS ──</option>
+            <option data-es="Sistema podológico bovino" data-en="Bovine podology system">Sistema podológico bovino</option>
+            <option data-es="Herradura de recuperación equina" data-en="Equine recovery horseshoe">Herradura de recuperación equina</option>
+            <option data-es="Consulta de tambo / haras" data-en="Dairy farm / stud farm inquiry">Consulta de tambo / haras</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label data-es="Mensaje" data-en="Message">Mensaje</label>
+          <textarea placeholder="Contanos sobre tu animal y qué necesitás..."></textarea>
+        </div>
+        <button class="btn-sub" data-es="Enviar mensaje →" data-en="Send message →">Enviar mensaje →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══════════════════════════════════════════════
+     CLOSING BANNER
+══════════════════════════════════════════════ -->
+<div class="closing">
+  <div style="max-width:1280px;margin:0 auto;padding:0 2rem">
+    <p data-es="INNOVACIÓN + <em>PROPÓSITO</em> = TRASCENDENCIA" data-en="INNOVATION + <em>PURPOSE</em> = TRANSCENDENCE">INNOVACIÓN + <em>PROPÓSITO</em> = TRASCENDENCIA</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════ -->
+<footer>
+  <div class="ft-inner">
+    <div class="ft-top">
+      <div class="ft-brand">
+        <a href="#inicio" class="logo-link" style="margin-bottom:.5rem">
+          <svg class="logo-mark" viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+            <rect width="90" height="90" rx="12" fill="#0A2560"/>
+            <ellipse cx="55" cy="40" rx="13" ry="16" fill="#F29E1F"/>
+            <circle cx="55" cy="32" r="6" fill="#0A2560" opacity=".6"/>
+            <circle cx="55" cy="32" r="3.5" fill="none" stroke="#0A2560" stroke-width="1.5"/>
+            <line x1="55" y1="41" x2="55" y2="50" stroke="#0A2560" stroke-width="2"/>
+            <circle cx="55" cy="53" r="3" fill="none" stroke="#0A2560" stroke-width="1.5"/>
+            <line x1="55" y1="56" x2="55" y2="62" stroke="#0A2560" stroke-width="1.5"/>
+            <circle cx="55" cy="64" r="2" fill="none" stroke="#0A2560" stroke-width="1.5"/>
+            <ellipse cx="38" cy="42" rx="18" ry="13" fill="#1a3a7a"/>
+            <circle cx="54" cy="30" r="9" fill="#1a3a7a"/>
+            <path d="M57 22 L63 16 L60 26 Z" fill="#1a3a7a"/>
+            <path d="M22 40 Q14 32 18 22" stroke="#1a3a7a" stroke-width="5" fill="none" stroke-linecap="round"/>
+            <path d="M28 53 L24 66 L30 68" stroke="#1a3a7a" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M44 55 L48 68 L43 70" stroke="#1a3a7a" stroke-width="5.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="logo-text-block">
+            <span class="logo-ache">ACHE</span>
+            <span class="logo-innovation">Innovation</span>
+          </div>
+        </a>
+        <p data-es="Potenciamos la movilidad animal, porque cada paso cuenta. Mascotas · Bovinos · Equinos." data-en="We enhance animal mobility, because every step counts. Pets · Cattle · Equine.">Potenciamos la movilidad animal, porque cada paso cuenta. Mascotas · Bovinos · Equinos.</p>
+      </div>
+      <div class="ft-col">
+        <h4 data-es="Mascotas" data-en="Pets">Mascotas</h4>
+        <ul>
+          <li><a href="#mascotas-sw" data-es="Software IA" data-en="AI Software">Software IA</a></li>
+          <li><a href="#mascotas-prod" data-es="Arnés rehabilitación" data-en="Rehab harness">Arnés rehabilitación</a></li>
+          <li><a href="#mascotas-prod" data-es="Carros ortopédicos" data-en="Orthopedic carts">Carros ortopédicos</a></li>
+          <li><a href="#mascotas-prod" data-es="Prótesis 3D" data-en="3D Prosthetics">Prótesis 3D</a></li>
+          <li><a href="#mascotas-prod" data-es="Órtesis y accesorios" data-en="Orthoses and accessories">Órtesis y accesorios</a></li>
+        </ul>
+      </div>
+      <div class="ft-col">
+        <h4 data-es="Animales Productivos" data-en="Productive Animals">Animales Productivos</h4>
+        <ul>
+          <li><a href="#bovinos" data-es="Sistema Bovino (Jul 2026)" data-en="Cattle System (Jul 2026)">Sistema Bovino (Jul 2026)</a></li>
+          <li><a href="#equinos" data-es="Herradura Equina (Dic 2026)" data-en="Equine Horseshoe (Dec 2026)">Herradura Equina (Dic 2026)</a></li>
+          <li><a href="#contacto" data-es="Para tambos" data-en="For dairy farms">Para tambos</a></li>
+          <li><a href="#contacto" data-es="Para haras" data-en="For stud farms">Para haras</a></li>
+        </ul>
+      </div>
+      <div class="ft-col">
+        <h4 data-es="Empresa" data-en="Company">Empresa</h4>
+        <ul>
+          <li><a href="#nosotros" data-es="Nosotros" data-en="About">Nosotros</a></li>
+          <li><a href="#contacto" data-es="Contacto" data-en="Contact">Contacto</a></li>
+          <li><a href="#contacto" data-es="Para veterinarios" data-en="For vets">Para veterinarios</a></li>
+          <li><a href="#contacto" data-es="Demo del software" data-en="Software demo">Demo del software</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="ft-bot">
+      <p class="ft-copy" data-es="© 2025 Ache Innovation. Todos los derechos reservados." data-en="© 2025 Ache Innovation. All rights reserved.">© 2025 Ache Innovation. Todos los derechos reservados.</p>
+      <div class="socials">
+        <a class="soc" href="#" title="Instagram">📸</a>
+        <a class="soc" href="#" title="LinkedIn" style="font-size:11px;font-weight:700;color:rgba(255,255,255,.6)">in</a>
+        <a class="soc" href="#" title="WhatsApp">💬</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+<script>
+/* ── LANGUAGE ── */
+let lang = 'es';
+function setLang(l) {
+  lang = l;
+  document.querySelectorAll('[data-es]').forEach(el => {
+    const v = el.getAttribute('data-' + l);
+    if (!v) return;
+    if (el.tagName === 'OPTION') { el.textContent = v; return; }
+    el.innerHTML = v;
+  });
+  document.querySelectorAll('.lb').forEach(b => b.classList.remove('on'));
+  document.querySelector(`.lb[onclick="setLang('${l}')"]`).classList.add('on');
+  document.documentElement.lang = l;
+}
+
+/* ── PRODUCT FILTER ── */
+function filterP(btn, cat) {
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('#petGrid .pc').forEach(card => {
+    const cats = card.dataset.cat || '';
+    const show = cat === 'all' || cats.includes(cat);
+    card.style.opacity = show ? '1' : '0';
+    card.style.display = show ? '' : 'none';
+  });
+}
+
+/* ── CART FEEDBACK ── */
+document.querySelectorAll('.btn-cart').forEach(b => {
+  b.addEventListener('click', function() {
+    const orig = this.innerHTML;
+    this.innerHTML = '✓';
+    this.style.background = '#27ae60';
+    setTimeout(() => { this.innerHTML = orig; this.style.background = ''; }, 1600);
+  });
+});
+
+/* ── SCROLL REVEAL ── */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('vis'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.fi').forEach(el => obs.observe(el));
+
+/* ── NAVBAR SHADOW ── */
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').style.boxShadow =
+    window.scrollY > 50 ? '0 4px 30px rgba(0,0,0,.28)' : 'none';
+});
+
+/* ── SMOOTH SCROLL ── */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); t.scrollIntoView({ behavior:'smooth' }); }
+  });
+});
+
+/* ── FORM ── */
+document.querySelector('.btn-sub').addEventListener('click', function() {
+  this.textContent = lang === 'es' ? '✓ ¡Enviado!' : '✓ Sent!';
+  this.style.background = '#27ae60';
+  setTimeout(() => {
+    this.textContent = lang === 'es' ? 'Enviar mensaje →' : 'Send message →';
+    this.style.background = '';
+  }, 2500);
+});
+
+/* ── STUDIO — detectar si el Biomechanics Studio está activo ── */
+const LOCAL_URL  = 'http://localhost:8502';
+let   studioUrl  = localStorage.getItem('ache_studio_url') || LOCAL_URL;
+
+function checkStudio() {
+  const iframe   = document.getElementById('studio-iframe');
+  const offline  = document.getElementById('studio-offline');
+  const link     = document.getElementById('studio-fullscreen-link');
+  fetch(studioUrl, { mode: 'no-cors', cache: 'no-store' })
+    .then(() => {
+      offline.style.display = 'none';
+      iframe.style.display  = 'block';
+      if (!iframe.src || iframe.src === 'about:blank' || iframe.src !== studioUrl + '/?embed=true') {
+        iframe.src = studioUrl + '/?embed=true&embed_options=disable_scrolling';
+      }
+      link.href = studioUrl;
+    })
+    .catch(() => {
+      offline.style.display = 'block';
+      iframe.style.display  = 'none';
+      // reintentar cada 8 s mientras esté offline
+      if (!window._studioRetry) {
+        window._studioRetry = setInterval(() => {
+          if (document.getElementById('studio-offline').style.display !== 'none') checkStudio();
+          else { clearInterval(window._studioRetry); window._studioRetry = null; }
+        }, 8000);
+      }
+    });
+}
+
+function setStudioUrl() {
+  const inp = document.getElementById('studio-url-input');
+  const val = inp ? inp.value.trim().replace(/\/$/, '') : '';
+  if (val) {
+    studioUrl = val;
+    localStorage.setItem('ache_studio_url', val);
+  } else {
+    studioUrl = LOCAL_URL;
+    localStorage.removeItem('ache_studio_url');
+  }
+  clearInterval(window._studioRetry);
+  window._studioRetry = null;
+  checkStudio();
+}
+
+window.addEventListener('load', checkStudio);
+</script>
+</body>
+</html>
