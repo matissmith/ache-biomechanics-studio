@@ -1530,6 +1530,17 @@ iframe{border-radius:22px!important;box-shadow:0 18px 52px rgba(10,37,96,.11)!im
   .ache-nav-lite{padding:12px!important;border-radius:18px!important;}
   .stButton>button{width:100%!important;}
 }
+
+/* ── Mobile: apilar columnas de Streamlit ─────────────────────────── */
+@media(max-width:640px){
+  /* Hace que los st.columns() se apilen verticalmente en pantallas chicas.
+     Aplica a todo: diseño de prótesis (params + 3D), análisis (fotos + info),
+     medición, historial, etc. Todo el contenido queda visible, solo apilado. */
+  [data-testid="stHorizontalBlock"]{flex-direction:column!important;}
+  [data-testid="stHorizontalBlock"] [data-testid="column"]{
+    width:100%!important;flex:1 1 100%!important;min-width:0!important;
+  }
+}
 </style>""", unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -1544,12 +1555,10 @@ NAV_OPTIONS = [
     "🩺 Guía quirúrgica",
     "📄 Reporte",
     "🗄 Historial",
-    "🐄 Productivos",
 ]
 
 NAV_MAPPING = {
     "🏠 Inicio software": "🏠  Inicio",
-    "🐄 Productivos": "🐄  Animales Productivos",
     "🐕 Biomechanics Studio": "🐕  Nuevo Caso",
     "📸 Fotos y análisis": "📸  Análisis de Imágenes",
     "🦿 Diseño biomecánico": "🦴  Diseño de Prótesis",
@@ -1586,7 +1595,6 @@ def render_brand_header():
 
 PAGE_KEYS = {
     "caso": ("🐕 Biomechanics Studio", "🐕  Nuevo Caso"),
-    "productivos": ("🐄 Productivos", "🐄  Animales Productivos"),
     "inicio": ("🏠 Inicio software", "🏠  Inicio"),
     "fotos": ("📸 Fotos y análisis", "📸  Análisis de Imágenes"),
     "diseno": ("🦿 Diseño biomecánico", "🦴  Diseño de Prótesis"),
@@ -1792,6 +1800,13 @@ st.markdown("""<style>
 .ache-purpose-row span{color:#536679 !important;line-height:1.38;}
 .ache-purpose-tag{justify-self:start;background:#F7FAFD;border:1px solid #D6E1EC;border-radius:999px;padding:4px 9px;color:#173555 !important;font-size:.82rem;font-weight:800;}
 @media(max-width:1000px){.ache-workbench{grid-template-columns:1fr;}.ache-flowline{grid-template-columns:repeat(2,1fr);}.ache-purpose-row{grid-template-columns:1fr;gap:5px;}.ache-action-grid{grid-template-columns:1fr;}}
+@media(max-width:640px){
+  /* Reducir altura del modelo 3D en mobile (el original es 650px) */
+  [data-testid="stPlotlyChart"] .js-plotly-plot,
+  [data-testid="stPlotlyChart"] .plot-container{max-height:360px!important;overflow:hidden!important;}
+  /* Ache-param-grid en 2 columnas en mobile */
+  .ache-param-grid{grid-template-columns:1fr 1fr!important;}
+}
 </style>""", unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -2789,7 +2804,6 @@ def main():
         page = render_top_navigation(st.session_state.active_nav)
 
     if   page == "🏠  Inicio":                    page_inicio()
-    elif page == "🐄  Animales Productivos":      page_productivos()
     elif page == "🐕  Nuevo Caso":                page_nuevo_caso()
     elif page == "📸  Análisis de Imágenes":      page_analisis()
     elif page == "🦴  Diseño de Prótesis":        page_diseno()
