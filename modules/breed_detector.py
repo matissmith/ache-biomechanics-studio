@@ -1,4 +1,5 @@
 """
+from typing import Optional
 Ache Innovation — Módulo de Detección de Raza
 
 Usa la Inference API de Hugging Face (HTTP) para clasificar razas caninas.
@@ -39,7 +40,7 @@ def _looks_like_dog_breed(label: str) -> bool:
     return any(k in low for k in DOG_KEYWORDS)
 
 
-def _get_hf_token() -> str | None:
+def _get_hf_token() -> Optional[str]:
     """Lee el token de Hugging Face desde Streamlit secrets (opcional)."""
     try:
         return st.secrets.get("HF_TOKEN")
