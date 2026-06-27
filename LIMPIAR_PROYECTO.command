@@ -1,76 +1,27 @@
 #!/bin/bash
-# Ache Innovation — Limpieza general del proyecto
-# Ejecutar una sola vez. Después de correr, mover este script a 90_Archivo también.
-
-BASE="$(cd "$(dirname "$0")/../../../.."; pwd)"
-CLOUD="$(dirname "$0")"
-
-echo "========================================"
-echo "  Ache Innovation — Limpieza del proyecto"
-echo "========================================"
-echo ""
-
-# ── 1. Eliminar scripts one-time del repo cloud ───────────────────
-echo "[ 1/4 ] Eliminando scripts obsoletos del repo cloud..."
-cd "$CLOUD"
-rm -f FIX_Y_PUSH.command
-rm -f PUSH_FIX_NAV.command
-rm -f ACTIVAR_PAGES.command
-rm -f HACER_PUBLICO_Y_PAGES.command
-rm -f SUBIR_A_GITHUB.command
-rm -f PUBLICAR_WEB.command
-rm -f PUSH_FIXES_DETECTOR.command
-echo "  ✅ Scripts one-time eliminados del repo cloud"
-
-# ── 2. Eliminar backups en ache_innovation/modules ────────────────
-echo ""
-echo "[ 2/4 ] Eliminando archivos .backup* en ache_innovation/modules..."
-LOCAL="$BASE/01_Software/ache_biomechanics_studio/ache_innovation/modules"
-rm -f "$LOCAL/"*.backup*
-rm -f "$LOCAL/"*_backup*
-echo "  ✅ Backups eliminados"
-
-# ── 3. Eliminar CHECK_TOOLS.command de la raíz ───────────────────
-echo ""
-echo "[ 3/4 ] Eliminando CHECK_TOOLS.command obsoleto de la raíz..."
-rm -f "$BASE/CHECK_TOOLS.command"
-echo "  ✅ CHECK_TOOLS.command raíz eliminado"
-
-# ── 4. Commit y push en el repo cloud ────────────────────────────
-echo ""
-echo "[ 4/4 ] Commiteando limpieza en git..."
-cd "$CLOUD"
+# Push de guia_quirurgica.py personalizada
+cd "$(dirname "$0")"
 rm -f .git/index.lock 2>/dev/null
 git config user.email "matiassmith98@gmail.com"
 git config user.name "matiassmith"
+git add modules/guia_quirurgica.py
+git commit -m "feat: guía clínica personalizada al caso activo
 
-# Agregar LIMPIAR_PROYECTO.command también para trackearlo brevemente
-git add -A
-git commit -m "chore: limpieza general — eliminar scripts one-time y obsoletos
-
-Scripts eliminados del repo (ya cumplieron su función):
-- FIX_Y_PUSH.command (fix puntual packages.txt)
-- PUSH_FIX_NAV.command (fix puntual nav)
-- ACTIVAR_PAGES.command (GitHub Pages ya activo)
-- HACER_PUBLICO_Y_PAGES.command (ya hecho)
-- SUBIR_A_GITHUB.command (fix puntual torch)
-- PUBLICAR_WEB.command (reemplazado por ACTUALIZAR_WEB)
-- PUSH_FIXES_DETECTOR.command (fix puntual del 26/06)
-
-Todos los scripts históricos están respaldados en 90_Archivo/Comandos_Obsoletos/."
-
+- Banner rico con todos los datos del caso (raza, peso, extremidad, nivel,
+  causa, BCS, medidas del muñón, specs de la prótesis, peso máx. prótesis)
+- Alertas automáticas inmediatas: oncológica, BCS alto, BCS 7
+- Tab Biomecánica: auto-selecciona Torácico/Pelviano desde extremidad del caso;
+  muestra nota personalizada para el nivel de amputación registrado (1-7)
+- Tab Clasificación: auto-clasifica A/B/C/D y pre-llena checkboxes desde
+  causa, BCS, nivel, medidas del muñón
+- Tab Diseño protésico: recomendaciones específicas por talla (toy/pequeño/
+  mediano/grande/gigante): material, pared socket, liner, pie, suspensión;
+  estimación por peso si no hay breed_info; resumen del diseño paramétrico actual
+- Tab Clínico: auto-selecciona causa desde el caso
+- helpers _auto_clasificar(), _TALLA_SPECS, _NIVEL_NOTAS"
 git push origin main
-
 echo ""
-echo "========================================"
-echo "  ✅ Limpieza completada y pusheada."
+git log --oneline -3
 echo ""
-echo "  Scripts activos que quedan en el repo:"
-echo "  - ACTUALIZAR_WEB.command  (actualiza web en GitHub Pages)"
-echo "  - CHECK_TOOLS.command     (verifica herramientas dev)"
-echo "  - INSTALAR_Y_DEPLOYAR.command"
-echo "  - SETUP_RAPIDO.command"
-echo "  - iniciar_con_tunel.command"
-echo "========================================"
-echo ""
+echo "✅ Guía personalizada en producción."
 read -p "Presioná Enter para salir..."
