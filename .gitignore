@@ -28,3 +28,6 @@ outputs/
 *.step
 *.stp
 *.pdf
+
+# Assets pesados no utilizados
+assets/ache_logo_main.jpeg
