@@ -145,7 +145,7 @@ st.markdown("""<style>
 :root{
   --ache-navy:#173555;--ache-navy-dark:#0B1D2F;--ache-blue:#214666;
   --ache-yellow:#F2AA24;--ache-yellow-soft:#FFF3D8;
-  --ache-bg:#F4F7FA;--ache-card:#FFFFFF;--ache-ink:#172B3F;--ache-muted:#68798A;--ache-line:#DCE5EE;
+  --ache-bg:#F4F7FA;--ache-card:#FFFFFF;--ache-ink:#172B3F;--ache-muted:#536679;--ache-line:#DCE5EE;
 }
 .block-container{max-width:1180px!important;padding-top:1.35rem!important;}
 .ache-page-title{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin:0 0 18px;}
@@ -246,7 +246,7 @@ a { color:#173555 !important; font-weight:700; }
   background:#FFFFFF;border:1px solid #DCE5EE;border-radius:18px;
   padding:10px;margin:0 0 18px;box-shadow:0 10px 26px rgba(23,53,85,.075);
 }
-.ache-top-nav-title{font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:#6B7A8C;margin:0 8px 0 4px;}
+.ache-top-nav-title{font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:#4E5C6B;margin:0 8px 0 4px;}
 .ache-top-nav a{
   text-decoration:none!important;color:#173555!important;background:#F7FAFD;
   border:1px solid #DCE5EE;border-radius:999px;padding:9px 13px;
@@ -370,7 +370,7 @@ st.markdown("""<style>
 }
 .ache-hero p{color:rgba(255,255,255,.92) !important;}
 .ache-hero .ache-pill{color:#FFFFFF !important;border-color:rgba(242,170,36,.55) !important;background:rgba(255,255,255,.10) !important;}
-.ache-top-nav-label{font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:#6B7A8C;margin:0 0 8px 4px;}
+.ache-top-nav-label{font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:#4E5C6B;margin:0 0 8px 4px;}
 .ache-nav-box{background:#FFFFFF;border:1px solid #DCE5EE;border-radius:18px;padding:12px 14px;margin:0 0 18px;box-shadow:0 10px 26px rgba(23,53,85,.075);}
 /* Top nav buttons only */
 div[data-testid="column"] .stButton > button{white-space:nowrap;min-height:42px !important;border-radius:999px !important;box-shadow:none !important;}
@@ -402,7 +402,7 @@ st.markdown("""<style>
 .ache-nav-box{padding:11px 12px !important;}
 .ache-top-nav-html{display:flex;gap:8px;align-items:center;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
 .ache-top-nav-html::-webkit-scrollbar{display:none;}
-.ache-top-nav-html .label{font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:#6B7A8C;margin-right:8px;white-space:nowrap;}
+.ache-top-nav-html .label{font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:#4E5C6B;margin-right:8px;white-space:nowrap;}
 .ache-top-nav-html a{display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;text-decoration:none!important;background:#FFFFFF;color:#173555!important;border:1px solid #D6E1EC;border-radius:999px;padding:10px 15px;font-weight:850;line-height:1;}
 .ache-top-nav-html a.active{background:#173555;color:#FFFFFF!important;border-color:#173555;}
 .ache-top-nav-html a:hover{background:#FFF3D8;color:#173555!important;border-color:#F2AA24;}
@@ -436,7 +436,7 @@ st.markdown("""<style>
   background:#FFFFFF;border:1px solid #DCE5EE;border-radius:18px;
   padding:12px 14px;margin:0 0 18px;box-shadow:0 10px 26px rgba(23,53,85,.075);
 }
-.ache-nav-native-title{font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:#6B7A8C;margin-bottom:8px;}
+.ache-nav-native-title{font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:#4E5C6B;margin-bottom:8px;}
 /* Radio horizontal nav */
 div[data-testid="stRadio"] label{cursor:pointer;}
 div[data-testid="stRadio"] [role="radiogroup"]{gap:8px !important;flex-wrap:wrap !important;}
@@ -503,7 +503,7 @@ st.markdown("""<style>
   background:#FFFFFF;border:1px solid #DCE5EE;border-radius:18px;
   padding:12px 14px;margin:0 0 18px;box-shadow:0 10px 26px rgba(23,53,85,.075);
 }
-.ache-nav-pills-title{font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:#6B7A8C;margin-bottom:8px;}
+.ache-nav-pills-title{font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:#4E5C6B;margin-bottom:8px;}
 .ache-nav-pills div[data-testid="stPills"] button,
 .ache-nav-pills div[data-testid="stSegmentedControl"] button{
   border-radius:999px !important;font-weight:850 !important;color:#173555 !important;
@@ -583,7 +583,7 @@ st.markdown("""<style>
     display:block !important;background:#FFFFFF;border:1px solid #DCE5EE;border-radius:16px;
     padding:12px;margin:0 0 12px;box-shadow:0 8px 22px rgba(23,53,85,.07);
   }
-  .ache-mobile-select-nav-title{font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:#6B7A8C;margin-bottom:8px;}
+  .ache-mobile-select-nav-title{font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:#4E5C6B;margin-bottom:8px;}
   .ache-mobile-select-nav [data-testid="stSelectbox"] label{display:none !important;}
   .ache-mobile-select-nav [data-baseweb="select"]{
     background:#F7FAFD !important;border:1px solid #D6E1EC !important;border-radius:12px !important;
@@ -691,7 +691,7 @@ st.markdown("""<style>
   background:#FFFFFF;border:1px solid #DCE5EE;border-radius:18px;
   padding:12px 14px;margin:0 0 18px;box-shadow:0 10px 26px rgba(23,53,85,.075);
 }
-.ache-nav-lite-title{font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:#6B7A8C;margin-bottom:8px;}
+.ache-nav-lite-title{font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;font-weight:900;color:#4E5C6B;margin-bottom:8px;}
 /* hide old iframe/component nav if any browser cache keeps it around */
 iframe[title="streamlit-component"]{max-height:0 !important;display:none !important;}
 @media(max-width:768px){
@@ -1022,7 +1022,7 @@ li[role="option"][aria-selected="true"] {
 [data-testid="stTextInput"] input::placeholder,
 [data-testid="stTextArea"] textarea::placeholder,
 [data-testid="stNumberInput"] input::placeholder {
-  color: #6B7A8C !important;
+  color: #4E5C6B !important;
   opacity: 1 !important;
 }
 
@@ -1065,7 +1065,7 @@ st.markdown("""<style>
   --ache-orange-2:#FFBE45;
   --ache-sky:#D6E6F5;
   --ache-line:#C8D8E8;
-  --ache-muted:#5B6E82;
+  --ache-muted:#536679;
   --ache-bg:#F6FAFE;
   --ache-white:#FFFFFF;
 }
@@ -1216,7 +1216,7 @@ st.markdown("""<style>
    ACHE HARD CONTRAST/POLISH FIX v20
    Fixes BaseWeb wrappers, form submit buttons, sidebar active state.
    ──────────────────────────────────────────────────────────────── */
-:root{--ache-navy:#173555;--ache-dark:#0B1D2F;--ache-orange:#F2AA24;--ache-orange-2:#FFBE45;--ache-border:#C9D8E8;--ache-bg:#F7FAFD;--ache-muted:#657789;--ache-white:#FFFFFF;}
+:root{--ache-navy:#173555;--ache-dark:#0B1D2F;--ache-orange:#F2AA24;--ache-orange-2:#FFBE45;--ache-border:#C9D8E8;--ache-bg:#F7FAFD;--ache-muted:#536679;--ache-white:#FFFFFF;}
 
 /* FORM CONTROLS — style the real BaseWeb wrappers, not only the inner input */
 [data-baseweb="input"],
@@ -1733,7 +1733,7 @@ st.markdown("""<style>
   padding:22px 24px;margin:18px 0 22px;box-shadow:0 14px 34px rgba(23,53,85,.08);
 }
 .ache-next-action .kicker,.ache-workflow-card .kicker,.ache-section-map .kicker{
-  color:#6B7A8C !important;text-transform:uppercase;letter-spacing:.08em;font-weight:900;font-size:.78rem;margin-bottom:8px;
+  color:#4E5C6B !important;text-transform:uppercase;letter-spacing:.08em;font-weight:900;font-size:.78rem;margin-bottom:8px;
 }
 .ache-next-action h2{margin:.05rem 0 .35rem !important;color:#173555 !important;font-size:1.65rem !important;}
 .ache-next-action p{color:#4F6173 !important;margin:0 !important;line-height:1.45 !important;}
@@ -1765,7 +1765,7 @@ st.markdown("""<style>
 .ache-workbench{display:grid;grid-template-columns:1.12fr .88fr;gap:18px;margin:18px 0 20px;align-items:stretch;}
 .ache-panel{background:#FFFFFF;border:1px solid #D6E1EC;border-radius:20px;padding:22px 24px;box-shadow:0 14px 34px rgba(23,53,85,.075);}
 .ache-panel.accent{border-left:6px solid #F2AA24;}
-.ache-kicker{color:#6B7A8C !important;text-transform:uppercase;letter-spacing:.08em;font-weight:900;font-size:.78rem;margin-bottom:8px;}
+.ache-kicker{color:#4E5C6B !important;text-transform:uppercase;letter-spacing:.08em;font-weight:900;font-size:.78rem;margin-bottom:8px;}
 .ache-panel h2{color:#173555 !important;margin:0 0 8px !important;font-size:1.55rem !important;line-height:1.15 !important;}
 .ache-panel h3{color:#173555 !important;margin:0 0 8px !important;font-size:1.12rem !important;}
 .ache-panel p{color:#536679 !important;line-height:1.46 !important;margin:.25rem 0 !important;}
@@ -1776,14 +1776,14 @@ st.markdown("""<style>
 .ache-status-item2.current .ache-status-dot{background:#F2AA24;box-shadow:0 0 0 4px rgba(242,170,36,.18);}
 .ache-status-item2.blocked .ache-status-dot{background:#C9D8E8;}
 .ache-status-item2 b{color:#173555 !important;display:block;margin-bottom:2px;}
-.ache-status-item2 span{color:#5B6E82 !important;line-height:1.35 !important;}
+.ache-status-item2 span{color:#536679 !important;line-height:1.35 !important;}
 .ache-clinical-note{background:#EAF2FA;border:1px solid #C9D8E8;border-left:5px solid #173555;border-radius:16px;padding:14px 16px;margin-top:14px;color:#173555 !important;}
 .ache-clinical-note *{color:#173555 !important;}
 .ache-action-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:14px;}
 .ache-action-card{background:#FFFFFF;border:1px solid #D6E1EC;border-radius:16px;padding:15px;min-height:118px;}
 .ache-action-card.enabled{border-color:#F2AA24;background:#FFF9ED;}
 .ache-action-card h4{margin:0 0 6px !important;color:#173555 !important;font-size:1.02rem !important;}
-.ache-action-card p{font-size:.94rem !important;color:#5B6E82 !important;margin:0 !important;}
+.ache-action-card p{font-size:.94rem !important;color:#536679 !important;margin:0 !important;}
 .ache-disabled{opacity:.58;}
 .ache-flowline{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin:20px 0;}
 .ache-flow-node{position:relative;background:#FFFFFF;border:1px solid #D6E1EC;border-radius:16px;padding:12px 10px;min-height:94px;box-shadow:0 8px 22px rgba(23,53,85,.05);}
@@ -1792,7 +1792,7 @@ st.markdown("""<style>
 .ache-flow-node.current{border-color:#F2AA24;box-shadow:0 10px 26px rgba(242,170,36,.14);}
 .ache-flow-node.current .n{background:#F2AA24;color:#173555;}
 .ache-flow-node b{display:block;color:#173555 !important;font-size:.92rem;line-height:1.15;}
-.ache-flow-node span{display:block;color:#6B7A8C !important;font-size:.82rem;line-height:1.25;margin-top:4px;}
+.ache-flow-node span{display:block;color:#4E5C6B !important;font-size:.82rem;line-height:1.25;margin-top:4px;}
 .ache-purpose-map{background:#FFFFFF;border:1px solid #D6E1EC;border-radius:20px;padding:20px 22px;margin:16px 0;box-shadow:0 12px 30px rgba(23,53,85,.06);}
 .ache-purpose-map h3{margin:0 0 12px !important;color:#173555 !important;}
 .ache-purpose-row{display:grid;grid-template-columns:210px 1fr 190px;gap:14px;padding:12px 0;border-top:1px solid #E6EEF6;align-items:start;}
@@ -2400,7 +2400,7 @@ def page_diseno():
         <div class="ache-product-card compact">
           <div class="ache-section-label">Paso 1</div>
           <h3 style="margin-top:0">Parámetros principales</h3>
-          <p style="margin-bottom:0;color:#68798A">Ajustá solo lo esencial. El resto lo calcula el template biomecánico.</p>
+          <p style="margin-bottom:0;color:#536679">Ajustá solo lo esencial. El resto lo calcula el template biomecánico.</p>
         </div>
         """, unsafe_allow_html=True)
 
@@ -2500,61 +2500,61 @@ def page_diseno():
 
                 verts, faces = parse_stl(stl_bytes)
 
-                    fig = go.Figure(data=[go.Mesh3d(
-                        x=verts[:,0], y=verts[:,1], z=verts[:,2],
-                        i=faces[:,0], j=faces[:,1], k=faces[:,2],
-                        color="#4F5D6A",
-                        opacity=1.0,
-                        flatshading=False,
-                        lighting=dict(ambient=0.62, diffuse=0.8, specular=0.22, roughness=0.68),
-                        lightposition=dict(x=80, y=-120, z=160),
-                        hoverinfo="skip"
-                    )])
+                fig = go.Figure(data=[go.Mesh3d(
+                    x=verts[:,0], y=verts[:,1], z=verts[:,2],
+                    i=faces[:,0], j=faces[:,1], k=faces[:,2],
+                    color="#4F5D6A",
+                    opacity=1.0,
+                    flatshading=False,
+                    lighting=dict(ambient=0.62, diffuse=0.8, specular=0.22, roughness=0.68),
+                    lightposition=dict(x=80, y=-120, z=160),
+                    hoverinfo="skip"
+                )])
 
-                    zmax = float(np.max(verts[:,2])) if len(verts) else 10
-                    ymax = float(np.max(verts[:,1])) if len(verts) else 8
-                    fig.add_trace(go.Scatter3d(
-                        x=[0,0], y=[0, ymax+1.4], z=[0.25,0.25],
-                        mode="lines+text", text=["", "frente / pie"],
-                        line=dict(color="#F2AA24", width=5),
-                        textposition="top center", showlegend=False, hoverinfo="skip"
-                    ))
-                    fig.add_trace(go.Scatter3d(
-                        x=[0,0], y=[0,0], z=[0,zmax],
-                        mode="lines+text", text=["suelo", "socket"],
-                        line=dict(color="#173555", width=3, dash="dot"),
-                        textposition="top center", showlegend=False, hoverinfo="skip"
-                    ))
+                zmax = float(np.max(verts[:,2])) if len(verts) else 10
+                ymax = float(np.max(verts[:,1])) if len(verts) else 8
+                fig.add_trace(go.Scatter3d(
+                    x=[0,0], y=[0, ymax+1.4], z=[0.25,0.25],
+                    mode="lines+text", text=["", "frente / pie"],
+                    line=dict(color="#F2AA24", width=5),
+                    textposition="top center", showlegend=False, hoverinfo="skip"
+                ))
+                fig.add_trace(go.Scatter3d(
+                    x=[0,0], y=[0,0], z=[0,zmax],
+                    mode="lines+text", text=["suelo", "socket"],
+                    line=dict(color="#173555", width=3, dash="dot"),
+                    textposition="top center", showlegend=False, hoverinfo="skip"
+                ))
 
-                    fig.update_layout(
-                        scene=dict(
-                            xaxis_title="Ancho (cm)", yaxis_title="Frente / atrás (cm)", zaxis_title="Altura (cm)",
-                            aspectmode="data",
-                            camera=dict(eye=dict(x=1.35, y=-2.55, z=1.05), up=dict(x=0,y=0,z=1)),
-                            xaxis=dict(showbackground=True, backgroundcolor="#F8FAFC", gridcolor="rgba(23,53,85,.13)", zeroline=False),
-                            yaxis=dict(showbackground=True, backgroundcolor="#F8FAFC", gridcolor="rgba(23,53,85,.13)", zeroline=False),
-                            zaxis=dict(showbackground=True, backgroundcolor="#F8FAFC", gridcolor="rgba(23,53,85,.16)", zeroline=False),
-                        ),
-                        height=650,
-                        margin=dict(l=0, r=0, t=4, b=0),
-                        paper_bgcolor="#FFFFFF",
-                        scene_bgcolor="#FFFFFF",
-                    )
-                    st.plotly_chart(fig, use_container_width=True, config={
-                        "displayModeBar": True,
-                        "displaylogo": False,
-                        "scrollZoom": True,
-                        "modeBarButtonsToRemove": ["lasso2d", "select2d"],
-                        "toImageButtonOptions": {"format":"png", "filename":"ache_cad_real"},
-                    })
+                fig.update_layout(
+                    scene=dict(
+                        xaxis_title="Ancho (cm)", yaxis_title="Frente / atrás (cm)", zaxis_title="Altura (cm)",
+                        aspectmode="data",
+                        camera=dict(eye=dict(x=1.35, y=-2.55, z=1.05), up=dict(x=0,y=0,z=1)),
+                        xaxis=dict(showbackground=True, backgroundcolor="#F8FAFC", gridcolor="rgba(23,53,85,.13)", zeroline=False),
+                        yaxis=dict(showbackground=True, backgroundcolor="#F8FAFC", gridcolor="rgba(23,53,85,.13)", zeroline=False),
+                        zaxis=dict(showbackground=True, backgroundcolor="#F8FAFC", gridcolor="rgba(23,53,85,.16)", zeroline=False),
+                    ),
+                    height=650,
+                    margin=dict(l=0, r=0, t=4, b=0),
+                    paper_bgcolor="#FFFFFF",
+                    scene_bgcolor="#FFFFFF",
+                )
+                st.plotly_chart(fig, use_container_width=True, config={
+                    "displayModeBar": True,
+                    "displaylogo": False,
+                    "scrollZoom": True,
+                    "modeBarButtonsToRemove": ["lasso2d", "select2d"],
+                    "toImageButtonOptions": {"format":"png", "filename":"ache_cad_real"},
+                })
 
-                    dl1, dl2 = st.columns(2)
-                    with dl1:
-                        st.download_button("📥 Descargar STL", data=stl_bytes, file_name="ache_protesis_biomecanica.stl", mime="model/stl", type="secondary", width="stretch")
-                    with dl2:
-                        st.download_button("📥 Descargar OpenSCAD", data=scad_parametrizado.encode("utf-8"), file_name="ache_protesis_biomecanica.scad", mime="text/plain", type="primary", width="stretch")
-                    _motor = "OpenSCAD" if _use_openscad else "Python (fallback)"
-                    st.caption(f"Malla: {len(verts):,} vértices · {len(faces):,} caras · Motor: {_motor}")
+                dl1, dl2 = st.columns(2)
+                with dl1:
+                    st.download_button("📥 Descargar STL", data=stl_bytes, file_name="ache_protesis_biomecanica.stl", mime="model/stl", type="secondary", width="stretch")
+                with dl2:
+                    st.download_button("📥 Descargar OpenSCAD", data=scad_parametrizado.encode("utf-8"), file_name="ache_protesis_biomecanica.scad", mime="text/plain", type="primary", width="stretch")
+                _motor = "OpenSCAD" if _use_openscad else "Python (fallback)"
+                st.caption(f"Malla: {len(verts):,} vértices · {len(faces):,} caras · Motor: {_motor}")
 
             except Exception as e:
                 st.error(f"No se pudo renderizar el modelo 3D: {e}")
