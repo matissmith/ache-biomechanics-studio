@@ -2045,7 +2045,8 @@ def page_analisis():
 
                 progress.empty()
 
-                if st.session_state.pop("breed_detection_service_error", False) and not best_results:
+                _service_failed = st.session_state.pop("breed_detection_service_error", False)
+                if _service_failed and not best_results:
                     st.warning("No se pudo completar la detección automática en este momento. Podés cargar la raza manualmente o continuar el caso como mestizo/sin raza definida.")
 
                 if best_results:
@@ -2110,7 +2111,8 @@ def page_analisis():
                             }
                             st.session_state.breed_info    = breed_info
                             st.session_state.detected_breed = top_breed
-                else:
+                elif not _service_failed:
+                    # Hubo fotos pero ninguna devolvió resultados de raza canina
                     st.error("No se pudo detectar la raza. Verificá que las fotos muestren claramente al perro.")
 
     # ── TAB 2: Medición ArUco ────────────────────────────────────────────────

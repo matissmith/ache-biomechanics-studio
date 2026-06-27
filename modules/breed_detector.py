@@ -1,23 +1,30 @@
 """
-from typing import Optional
 Ache Innovation — Módulo de Detección de Raza
 
 Usa la Inference API de Hugging Face (HTTP) para clasificar razas caninas.
 No carga modelos localmente — no requiere torch ni transformers.
+
+Estrategia de fallback:
+  1. Modelo primario: google/vit-base-patch16-224 (ImageNet, incluye 120 razas caninas)
+  2. Modelo secundario: microsoft/resnet-50 (siempre activo en HF, mismo formato de respuesta)
+  Si ambos fallan, lanza excepción para que el caller muestre el mensaje apropiado.
 """
 
 import io
 import time
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 import requests
 import streamlit as st
 from PIL import Image
 
 
-# Modelo público de clasificación ImageNet (incluye razas caninas).
-MODEL_ID = "google/vit-base-patch16-224"
-HF_API_URL = f"https://api-inference.huggingface.co/models/{MODEL_ID}"
+# ── Modelos en cascada ────────────────────────────────────────────────────────
+_HF_BASE = "https://api-inference.huggingface.co/models"
+_MODELS = [
+    f"{_HF_BASE}/google/vit-base-patch16-224",   # primario — 120 razas caninas en ImageNet
+    f"{_HF_BASE}/microsoft/resnet-50",            # secundario — siempre activo en HF free tier
+]
 
 DOG_KEYWORDS = {
     "retriever", "labrador", "golden", "terrier", "spaniel", "poodle",
@@ -48,15 +55,58 @@ def _get_hf_token() -> Optional[str]:
         return None
 
 
+def _query_model(url: str, img_bytes: bytes, headers: dict) -> Optional[List[Dict]]:
+    """
+    Intenta consultar un modelo HF.
+    Retorna lista de resultados normalizados, o None si el modelo no responde.
+    Timeout reducido a 15s para no hacer esperar al usuario.
+    """
+    for attempt in range(2):
+        try:
+            resp = requests.post(url, headers=headers, data=img_bytes, timeout=15)
+        except requests.exceptions.Timeout:
+            return None
+        except requests.exceptions.ConnectionError:
+            return None
+
+        if resp.status_code == 200:
+            raw = resp.json()
+            if not isinstance(raw, list):
+                return None
+            normalized = []
+            for r in raw:
+                label = _clean_label(str(r.get("label", "")))
+                score = float(r.get("score", 0.0))
+                if label:
+                    normalized.append({"label": label, "score": score})
+            return normalized if normalized else None
+
+        if resp.status_code == 503:
+            # Modelo cargando — esperamos máximo 8 segundos antes de pasar al siguiente
+            try:
+                wait = min(resp.json().get("estimated_time", 5), 8)
+            except Exception:
+                wait = 5
+            time.sleep(wait)
+            continue
+
+        # Cualquier otro error (401, 404, 429, 5xx) → no reintentar este modelo
+        return None
+
+    return None
+
+
 def detect_breed(image: Image.Image) -> List[Dict]:
     """
     Detecta la raza del perro en una imagen usando la HF Inference API.
+    Prueba el modelo primario y, si falla, el secundario.
     No carga ningún modelo localmente.
 
     Returns:
-        Lista de dicts con label y score.
+        Lista de dicts con label y score (puede estar vacía si no detecta razas).
+    Raises:
+        RuntimeError si ningún modelo responde.
     """
-    # Convertir imagen a bytes JPEG para enviar por HTTP
     img = image.convert("RGB")
     buf = io.BytesIO()
     img.save(buf, format="JPEG", quality=90)
@@ -67,42 +117,24 @@ def detect_breed(image: Image.Image) -> List[Dict]:
     if token:
         headers["Authorization"] = f"Bearer {token}"
 
-    # Si el modelo está dormido en HF, esperamos hasta 30 seg
-    for attempt in range(3):
-        resp = requests.post(HF_API_URL, headers=headers, data=img_bytes, timeout=30)
+    last_error: Optional[str] = None
+    for model_url in _MODELS:
+        normalized = _query_model(model_url, img_bytes, headers)
+        if normalized is not None:
+            dog_results = [r for r in normalized if _looks_like_dog_breed(r["label"])]
+            return dog_results[:5] if dog_results else normalized[:5]
+        last_error = model_url
 
-        if resp.status_code == 200:
-            break
-        if resp.status_code == 503:
-            # Modelo cargando — HF devuelve {"estimated_time": N}
-            wait = min(resp.json().get("estimated_time", 10), 20)
-            time.sleep(wait)
-            continue
-        raise RuntimeError(
-            f"HF Inference API error {resp.status_code}: {resp.text[:200]}"
-        )
-    else:
-        raise RuntimeError("El modelo de detección de raza tardó demasiado en cargar. Intente de nuevo en unos segundos.")
-
-    raw = resp.json()
-
-    # La API devuelve [{"label": "...", "score": 0.99}, ...]
-    normalized = []
-    for r in raw:
-        label = _clean_label(str(r.get("label", "")))
-        score = float(r.get("score", 0.0))
-        if label:
-            normalized.append({"label": label, "score": score})
-
-    dog_results = [r for r in normalized if _looks_like_dog_breed(r["label"])]
-    return dog_results[:5] if dog_results else normalized[:5]
+    raise RuntimeError(
+        "El servicio de detección no está disponible en este momento. "
+        "Podés ingresar la raza manualmente."
+    )
 
 
 def format_breed_name(raw_label: str) -> str:
     """Convierte labels del modelo a nombre legible."""
     clean = _clean_label(raw_label)
 
-    # Normalizaciones útiles para que matchee con la base de datos morfológica.
     aliases = {
         "labrador retriever": "Labrador Retriever",
         "golden retriever": "Golden Retriever",
