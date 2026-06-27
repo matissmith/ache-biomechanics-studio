@@ -1961,7 +1961,6 @@ def page_nuevo_caso():
 
         st.success(f"✅ Caso #{case_id} registrado — **{nombre_perro}**. "
                    "Ahora podés ir a **Análisis de Imágenes**.")
-        st.balloons()
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -2040,10 +2039,14 @@ def page_analisis():
                             best_score    = results[0]["score"]
                             best_results  = results
                             best_file_idx = idx
-                    except Exception as e:
-                        st.warning(f"No se pudo analizar foto {idx+1}: {e}")
+                    except Exception:
+                        st.session_state["breed_detection_service_error"] = True
+                        continue
 
                 progress.empty()
+
+                if st.session_state.pop("breed_detection_service_error", False) and not best_results:
+                    st.warning("No se pudo completar la detección automática en este momento. Podés cargar la raza manualmente o continuar el caso como mestizo/sin raza definida.")
 
                 if best_results:
                     st.session_state.breed_results = best_results
