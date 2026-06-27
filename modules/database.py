@@ -17,21 +17,35 @@ def init_db(db_path: Path) -> None:
 
     c.execute("""
         CREATE TABLE IF NOT EXISTS cases (
-            id              INTEGER PRIMARY KEY AUTOINCREMENT,
-            nombre_perro    TEXT NOT NULL,
-            nombre_dueno    TEXT NOT NULL,
-            peso_actual     REAL,
-            sexo            TEXT,
-            edad            TEXT,
-            extremidad      TEXT,
-            estado          TEXT,
-            raza_manual     TEXT,
-            raza_detectada  TEXT,
-            notas           TEXT,
-            vet_nombre      TEXT,
-            fecha           TEXT
+            id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+            nombre_perro        TEXT NOT NULL,
+            nombre_dueno        TEXT NOT NULL,
+            peso_actual         REAL,
+            sexo                TEXT,
+            edad                TEXT,
+            extremidad          TEXT,
+            nivel_amputacion    INTEGER,
+            causa               TEXT,
+            bcs                 INTEGER,
+            estado              TEXT,
+            raza_manual         TEXT,
+            raza_detectada      TEXT,
+            notas               TEXT,
+            vet_nombre          TEXT,
+            fecha               TEXT
         )
     """)
+
+    # Migración para bases existentes: agregar columnas si no existen
+    for col, coltype in [
+        ("nivel_amputacion", "INTEGER"),
+        ("causa",            "TEXT"),
+        ("bcs",              "INTEGER"),
+    ]:
+        try:
+            c.execute(f"ALTER TABLE cases ADD COLUMN {col} {coltype}")
+        except sqlite3.OperationalError:
+            pass  # columna ya existe
 
     c.execute("""
         CREATE TABLE IF NOT EXISTS measurements (
@@ -67,8 +81,9 @@ def save_case(db_path: Path, case_data: Dict) -> int:
     c.execute("""
         INSERT INTO cases
             (nombre_perro, nombre_dueno, peso_actual, sexo, edad,
-             extremidad, estado, raza_manual, notas, vet_nombre, fecha)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+             extremidad, nivel_amputacion, causa, bcs,
+             estado, raza_manual, notas, vet_nombre, fecha)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (
         case_data.get("nombre_perro"),
         case_data.get("nombre_dueno"),
@@ -76,6 +91,9 @@ def save_case(db_path: Path, case_data: Dict) -> int:
         case_data.get("sexo"),
         case_data.get("edad"),
         case_data.get("extremidad"),
+        case_data.get("nivel_amputacion"),
+        case_data.get("causa"),
+        case_data.get("bcs"),
         case_data.get("estado"),
         case_data.get("raza_manual"),
         case_data.get("notas"),

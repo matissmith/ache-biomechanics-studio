@@ -1,11 +1,12 @@
 """Render y lectura de STL para preview real en la app.
 
-Usa OpenSCAD CLI si está instalado en macOS. Genera STL desde SCAD y lo
-parsea para visualizar exactamente el modelo CAD exportable.
+Usa OpenSCAD CLI si está disponible (macOS o Linux/Streamlit Cloud).
+Genera STL desde SCAD y lo parsea para visualizar el modelo CAD exportable.
 """
 
 from __future__ import annotations
 
+import shutil
 import struct
 import subprocess
 import tempfile
@@ -14,25 +15,44 @@ from typing import Tuple
 
 import numpy as np
 
-OPENSCAD_MAC = Path("/Applications/OpenSCAD.app/Contents/MacOS/OpenSCAD")
+# Rutas posibles de OpenSCAD según plataforma
+_OPENSCAD_MAC  = Path("/Applications/OpenSCAD.app/Contents/MacOS/OpenSCAD")
+_OPENSCAD_LINUX = Path("/usr/bin/openscad")
+
+
+def _openscad_executable() -> str | None:
+    """Devuelve la ruta al ejecutable de OpenSCAD o None si no está disponible."""
+    # macOS (instalación estándar)
+    if _OPENSCAD_MAC.exists():
+        return str(_OPENSCAD_MAC)
+    # Linux / Streamlit Cloud (instalado via packages.txt con apt)
+    if _OPENSCAD_LINUX.exists():
+        return str(_OPENSCAD_LINUX)
+    # Fallback: buscar en PATH (cualquier plataforma)
+    found = shutil.which("openscad")
+    if found:
+        return found
+    return None
 
 
 def openscad_available() -> bool:
-    return OPENSCAD_MAC.exists() and OPENSCAD_MAC.is_file()
+    """True si OpenSCAD CLI está disponible en el sistema."""
+    return _openscad_executable() is not None
 
 
 def render_scad_to_stl(scad_code: str, timeout: int = 90) -> bytes:
     """Renderiza código SCAD a STL usando OpenSCAD CLI y devuelve bytes STL."""
-    if not openscad_available():
-        raise RuntimeError("OpenSCAD no está instalado en /Applications/OpenSCAD.app")
+    exe = _openscad_executable()
+    if not exe:
+        raise RuntimeError("OpenSCAD no está disponible en este sistema.")
 
     with tempfile.TemporaryDirectory(prefix="ache_scad_") as td:
         td = Path(td)
         scad_path = td / "model.scad"
-        stl_path = td / "model.stl"
+        stl_path  = td / "model.stl"
         scad_path.write_text(scad_code, encoding="utf-8")
 
-        cmd = [str(OPENSCAD_MAC), "-o", str(stl_path), str(scad_path)]
+        cmd = [exe, "-o", str(stl_path), str(scad_path)]
         proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
         if proc.returncode != 0:
             raise RuntimeError((proc.stderr or proc.stdout or "OpenSCAD falló").strip())
@@ -81,8 +101,7 @@ def _parse_binary_stl(data: bytes) -> Tuple[np.ndarray, np.ndarray]:
     faces = []
     offset = 84
     for _ in range(n_tri):
-        # normal 12 bytes, then 3 vertices
-        offset += 12
+        offset += 12  # saltar normal
         idx = []
         for _v in range(3):
             x, y, z = struct.unpack_from("<fff", data, offset)
@@ -97,7 +116,7 @@ def _parse_binary_stl(data: bytes) -> Tuple[np.ndarray, np.ndarray]:
 def _dedupe(vertices: np.ndarray, faces: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     if len(vertices) == 0:
         return vertices, faces
-    # STL está en mm. Convertimos a cm para que coincida con los ejes de la app.
+    # STL en mm → convertir a cm para coincidir con los ejes de la app
     vertices = vertices / 10.0
     rounded = np.round(vertices, 5)
     unique, inverse = np.unique(rounded, axis=0, return_inverse=True)

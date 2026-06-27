@@ -31,6 +31,7 @@ from modules.measurement import detect_aruco, generate_aruco_marker_png
 from modules.breed_database import get_breed_info, get_all_breed_names, estimate_limb_from_weight
 from modules.report_generator import generate_pdf_report
 from modules.stl_renderer import render_scad_to_stl, parse_stl, openscad_available
+from modules.prosthetic_cad import generate_prosthetic_mesh, mesh_to_ascii_stl
 from modules.guia_quirurgica import render_guia_quirurgica
 
 # ── Configuración ────────────────────────────────────────────────────────────
@@ -1932,6 +1933,31 @@ def page_nuevo_caso():
                 ["Delantera Izquierda", "Delantera Derecha",
                  "Trasera Izquierda", "Trasera Derecha"]
             )
+            nivel_amputacion = st.selectbox(
+                "Nivel de amputación",
+                [
+                    "No determinado",
+                    "1 — Cuarto anterior / Hemipelvectomía",
+                    "2 — Desarticulación hombro / cadera",
+                    "3 — Transhumeral / Transfemoral proximal (>50%)",
+                    "4 — Transhumeral / Transfemoral medio-distal (<50%)",
+                    "5 — Desarticulación codo / stifle",
+                    "6 — Transradial / Transtibial",
+                    "7 — Desarticulación carpo/tarso o parcial",
+                ],
+                help="Nivel 6-7 = mejor escenario protésico. Nivel 1-2 = muy complejo."
+            )
+            causa = st.selectbox(
+                "Causa de la amputación / pérdida",
+                ["No especificada", "Traumática", "Oncológica",
+                 "Congénita / malformativa", "Infecciosa",
+                 "Neurológica / funcional", "Post-amputación previa"]
+            )
+            bcs = st.slider(
+                "Condición corporal (BCS 1-9)",
+                min_value=1, max_value=9, value=5,
+                help="1-3: delgadez · 4-5: ideal · 6-7: sobrepeso · 8-9: obesidad"
+            )
             estado = st.selectbox(
                 "Estado actual",
                 ["Requiere amputación", "Ya amputado (tiene muñón)", "Evaluación inicial"]
@@ -1943,7 +1969,7 @@ def page_nuevo_caso():
             vet_nombre = st.text_input("Veterinario tratante", placeholder="Dr. / Dra.")
             notas = st.text_area("Notas clínicas",
                                  placeholder="Observaciones del veterinario...",
-                                 height=100)
+                                 height=80)
 
         submitted = st.form_submit_button("💾 Registrar Caso", type="primary")
 
@@ -1952,18 +1978,25 @@ def page_nuevo_caso():
             st.error("Los campos marcados con * son obligatorios.")
             return
 
+        # Extraer número de nivel (1-7) del string del selectbox
+        _nivel_str = nivel_amputacion.split("—")[0].strip()
+        _nivel_int = int(_nivel_str) if _nivel_str.isdigit() else None
+
         case_data = {
-            "nombre_perro": nombre_perro.strip(),
-            "nombre_dueno": nombre_dueno.strip(),
-            "peso_actual":  peso_actual,
-            "sexo":         sexo,
-            "edad":         edad,
-            "extremidad":   extremidad,
-            "estado":       estado,
-            "raza_manual":  raza_manual.strip(),
-            "notas":        notas.strip(),
-            "vet_nombre":   vet_nombre.strip(),
-            "fecha":        datetime.now().isoformat(),
+            "nombre_perro":     nombre_perro.strip(),
+            "nombre_dueno":     nombre_dueno.strip(),
+            "peso_actual":      peso_actual,
+            "sexo":             sexo,
+            "edad":             edad,
+            "extremidad":       extremidad,
+            "nivel_amputacion": _nivel_int,
+            "causa":            causa,
+            "bcs":              bcs,
+            "estado":           estado,
+            "raza_manual":      raza_manual.strip(),
+            "notas":            notas.strip(),
+            "vet_nombre":       vet_nombre.strip(),
+            "fecha":            datetime.now().isoformat(),
         }
 
         case_id = save_case(DB_PATH, case_data)
@@ -2445,22 +2478,27 @@ def page_diseno():
           </div>
         """, unsafe_allow_html=True)
 
-        if not openscad_available():
-            st.error("OpenSCAD no está disponible. Instalalo para renderizar el preview CAD real.")
-        else:
-            with st.spinner("Renderizando CAD real con OpenSCAD…"):
-                try:
-                    import plotly.graph_objects as go
+        _use_openscad = openscad_available()
+        _spinner_msg = "Renderizando CAD con OpenSCAD…" if _use_openscad else "Generando modelo 3D…"
 
-                    scad_key = str(hash(scad_parametrizado))
-                    cache = st.session_state.setdefault("stl_render_cache", {})
-                    if scad_key in cache:
-                        stl_bytes = cache[scad_key]
-                    else:
+        with st.spinner(_spinner_msg):
+            try:
+                import plotly.graph_objects as go
+
+                scad_key = str(hash(scad_parametrizado)) + ("_scad" if _use_openscad else "_py")
+                cache = st.session_state.setdefault("stl_render_cache", {})
+                if scad_key in cache:
+                    stl_bytes = cache[scad_key]
+                else:
+                    if _use_openscad:
                         stl_bytes = render_scad_to_stl(scad_parametrizado)
-                        cache[scad_key] = stl_bytes
+                    else:
+                        # Fallback: generación Python pura (no requiere OpenSCAD)
+                        mesh = generate_prosthetic_mesh(specs)
+                        stl_bytes = mesh_to_ascii_stl(mesh).encode("utf-8")
+                    cache[scad_key] = stl_bytes
 
-                    verts, faces = parse_stl(stl_bytes)
+                verts, faces = parse_stl(stl_bytes)
 
                     fig = go.Figure(data=[go.Mesh3d(
                         x=verts[:,0], y=verts[:,1], z=verts[:,2],
@@ -2515,10 +2553,11 @@ def page_diseno():
                         st.download_button("📥 Descargar STL", data=stl_bytes, file_name="ache_protesis_biomecanica.stl", mime="model/stl", type="secondary", width="stretch")
                     with dl2:
                         st.download_button("📥 Descargar OpenSCAD", data=scad_parametrizado.encode("utf-8"), file_name="ache_protesis_biomecanica.scad", mime="text/plain", type="primary", width="stretch")
-                    st.caption(f"Malla real: {len(verts):,} vértices · {len(faces):,} caras · Template biomecánico v4")
+                    _motor = "OpenSCAD" if _use_openscad else "Python (fallback)"
+                    st.caption(f"Malla: {len(verts):,} vértices · {len(faces):,} caras · Motor: {_motor}")
 
-                except Exception as e:
-                    st.error(f"No se pudo renderizar el CAD real con OpenSCAD: {e}")
+            except Exception as e:
+                st.error(f"No se pudo renderizar el modelo 3D: {e}")
 
         st.markdown("</div>", unsafe_allow_html=True)
 
@@ -2563,23 +2602,28 @@ def page_guia():
 
     # Adaptador para el módulo v0.2 generado como herramienta independiente.
     caso_activo = {
-        "nombre_paciente": case.get("nombre_perro", "—"),
-        "nombre_perro": case.get("nombre_perro", "—"),
-        "tutor": case.get("nombre_dueno", "—"),
-        "veterinario": case.get("vet_nombre", "—"),
-        "raza": st.session_state.get("detected_breed") or case.get("raza_detectada") or case.get("raza_manual") or "—",
-        "peso_kg": case.get("peso_actual", "—"),
-        "edad": case.get("edad", "—"),
-        "sexo": case.get("sexo", "—"),
-        "extremidad": case.get("extremidad", "—"),
-        "estado": case.get("estado", "—"),
-        "notas": case.get("notas", ""),
-        "munon_largo_cm": measurements.get("munon_largo_cm", "—"),
-        "munon_circunf_base_cm": measurements.get("munon_circunf_base_cm", "—"),
-        "munon_circunf_distal_cm": measurements.get("munon_circunf_distal_cm", "—"),
-        "profundidad_socket_cm": specs.get("profundidad_socket_cm", "—"),
-        "longitud_protesis_cm": specs.get("longitud_total_cm", "—"),
-        "breed_info": breed_info,
+        "nombre_paciente":        case.get("nombre_perro", "—"),
+        "nombre_perro":           case.get("nombre_perro", "—"),
+        "tutor":                  case.get("nombre_dueno", "—"),
+        "veterinario":            case.get("vet_nombre", "—"),
+        "raza":                   st.session_state.get("detected_breed") or case.get("raza_detectada") or case.get("raza_manual") or "—",
+        "peso_kg":                case.get("peso_actual", "—"),
+        "edad":                   case.get("edad", "—"),
+        "sexo":                   case.get("sexo", "—"),
+        "extremidad":             case.get("extremidad", "—"),
+        "nivel_amputacion":       case.get("nivel_amputacion"),
+        "causa":                  case.get("causa", "—"),
+        "bcs":                    case.get("bcs"),
+        "estado":                 case.get("estado", "—"),
+        "notas":                  case.get("notas", ""),
+        "munon_largo_cm":         measurements.get("munon_largo_cm", "—"),
+        "munon_circunf_base_cm":  measurements.get("munon_circunf_base_cm", "—"),
+        "munon_circunf_distal_cm":measurements.get("munon_circunf_distal_cm", "—"),
+        "profundidad_socket_cm":  specs.get("profundidad_socket_cm", "—"),
+        "longitud_protesis_cm":   specs.get("longitud_total_cm", "—"),
+        "material_protesis":      specs.get("material", "—"),
+        "tipo_extremidad_disenio":specs.get("tipo", "—"),
+        "breed_info":             breed_info,
     }
 
     if not case:
