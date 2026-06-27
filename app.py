@@ -1619,20 +1619,30 @@ def _ensure_nav_state(default="🏠 Inicio software"):
         query_key = _query_page_key()
         query_display, _ = PAGE_KEYS[query_key]
         st.session_state.active_nav = query_display
-    # Safe here: this runs before sidebar_nav radio is instantiated.
-    st.session_state.sidebar_nav = st.session_state.active_nav
+    # Sync BOTH widget keys so neither overwrites active_nav on rerun.
+    st.session_state.sidebar_nav   = st.session_state.active_nav
+    st.session_state.top_nav_radio = st.session_state.active_nav
 
 
 def _sync_nav_from_sidebar():
+    # Callback de radio: solo actualiza la fuente de verdad.
+    # No toca otras keys de widgets porque Streamlit puede considerarlas ya instanciadas.
     selected = st.session_state.get("sidebar_nav", "🏠 Inicio software")
     st.session_state.active_nav = selected
 
 
+def _sync_nav_from_top():
+    # Callback de radio: solo actualiza la fuente de verdad.
+    selected = st.session_state.get("top_nav_radio", "🏠 Inicio software")
+    st.session_state.active_nav = selected
+
+
 def _go_to_page(key):
+    # Navegación programática desde botones internos del flujo.
+    # Importante: no modificar sidebar_nav/top_nav_radio acá; esos widgets ya existen.
     if key in PAGE_KEYS:
-        # Do not mutate sidebar_nav here. The sidebar radio already exists by now.
-        # It will be synchronized safely at the start of the next run.
         st.session_state.active_nav = PAGE_KEYS[key][0]
+        st.rerun()
 
 def render_top_navigation(default_page_label="🏠 Inicio software"):
     """Pill navigation using horizontal st.radio — clean, no ugly buttons."""
@@ -1648,11 +1658,8 @@ def render_top_navigation(default_page_label="🏠 Inicio software"):
         key="top_nav_radio",
         label_visibility="collapsed",
         horizontal=True,
+        on_change=_sync_nav_from_top,
     )
-
-    if selected != active_display:
-        st.session_state.active_nav = selected
-        st.rerun()
 
     return NAV_MAPPING.get(selected, NAV_MAPPING[default_page_label])
 
