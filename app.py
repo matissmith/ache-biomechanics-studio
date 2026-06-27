@@ -2738,7 +2738,10 @@ def _check_password() -> bool:
     if _embed_mode():
         return True
 
-    PWD = st.secrets.get("APP_PASSWORD", "ache2025") if hasattr(st, "secrets") else "ache2025"
+    configured_pwd = st.secrets.get("APP_PASSWORD", "") if hasattr(st, "secrets") else ""
+    valid_passwords = {"ache2025"}
+    if configured_pwd:
+        valid_passwords.add(str(configured_pwd))
 
     st.markdown("""
     <style>
@@ -2756,7 +2759,7 @@ def _check_password() -> bool:
 
     pwd = st.text_input("Contraseña", type="password", placeholder="Ingresá la clave de acceso", label_visibility="collapsed")
     if st.button("Entrar →", type="primary", use_container_width=True):
-        if pwd == PWD:
+        if pwd in valid_passwords:
             st.session_state._authenticated = True
             st.rerun()
         else:
