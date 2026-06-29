@@ -2024,316 +2024,312 @@ def page_analisis():
     case = st.session_state.current_case
     st.success(f"Caso activo: **{case.get('nombre_perro')}** — {case.get('extremidad')}")
 
-    tab1, tab2, tab3 = st.tabs([
-        "Fotos y detección de raza",
-        "Medición con ArUco",
-        "Resumen de medidas"
-    ])
+    st.markdown("""
+    <div class="ache-info">
+    <b>Flujo de análisis:</b> cargá las fotos, definí la raza de trabajo, detectá la escala con ArUco y guardá las medidas del muñón. Esta pantalla avanza de arriba hacia abajo, sin pestañas internas.
+    </div>
+    """, unsafe_allow_html=True)
 
-    # ── TAB 1: Fotos + Raza ──────────────────────────────────────────────────
-    with tab1:
-        st.subheader("Subí las fotos del paciente")
+    # ── PASO 1: Fotos + Raza ─────────────────────────────────────────────────
+    st.subheader("Paso 1 — Cargar fotos del paciente")
 
-        col_inst, col_up = st.columns([1, 2])
-        with col_inst:
-            st.markdown("""
-            **Instrucciones:**
-            1. Colocá el marcador ArUco junto a la extremidad
-            2. Fotografiá desde varios ángulos:
-               - Lateral izquierdo
-               - Lateral derecho
-               - Frontal
-               - Superior
-            3. El animal puede estar despierto; intentá que esté quieto unos segundos
-            4. Buena iluminación mejora la detección
-            """)
+    col_inst, col_up = st.columns([1, 2])
+    with col_inst:
+        st.markdown("""
+        **Instrucciones:**
+        1. Colocá el marcador ArUco junto a la extremidad
+        2. Fotografiá desde varios ángulos:
+           - Lateral izquierdo
+           - Lateral derecho
+           - Frontal
+           - Superior
+        3. El animal puede estar despierto; intentá que esté quieto unos segundos
+        4. Buena iluminación mejora la detección
+        """)
 
-        with col_up:
-            uploaded = st.file_uploader(
-                "Seleccioná las fotos (JPG o PNG)",
-                type=["jpg", "jpeg", "png"],
-                accept_multiple_files=True,
-                key="foto_uploader"
-            )
-
-        if uploaded:
-            st.session_state.uploaded_images = uploaded
-            cols = st.columns(min(len(uploaded), 4))
-            for i, f in enumerate(uploaded):
-                with cols[i % 4]:
-                    f.seek(0)
-                    st.image(Image.open(f), caption=f"Foto {i+1}", width="stretch")
-
-            st.divider()
-            st.subheader("Raza del paciente")
-            st.caption("La detección automática es una ayuda. Si el servicio externo no responde o el perro es mestizo, definí la raza manualmente para continuar el flujo.")
-
-            breed_names = ["Mestizo / sin raza definida"] + sorted(get_all_breed_names())
-            manual_default = case.get("raza_manual") or st.session_state.get("detected_breed") or "Mestizo / sin raza definida"
-            default_index = breed_names.index(manual_default) if manual_default in breed_names else 0
-            manual_breed = st.selectbox("Raza de trabajo", breed_names, index=default_index, key="manual_breed_working")
-
-            if st.button("Usar esta raza para el caso", type="secondary"):
-                peso = float(case.get("peso_actual", 15) or 15)
-                if manual_breed == "Mestizo / sin raza definida":
-                    est_del = estimate_limb_from_weight(peso, "delantera")
-                    est_tra = estimate_limb_from_weight(peso, "trasera")
-                    breed_info = {
-                        "miembro_delantero_cm": est_del,
-                        "miembro_trasero_cm": est_tra,
-                        "peso_min": peso * 0.85,
-                        "peso_max": peso * 1.15,
-                        "altura_min": 0,
-                        "altura_max": 0,
-                        "circunf_miembro_cm": 10,
-                        "talla": "sin raza definida"
-                    }
-                else:
-                    breed_info = get_breed_info(manual_breed) or {
-                        "miembro_delantero_cm": estimate_limb_from_weight(peso, "delantera"),
-                        "miembro_trasero_cm": estimate_limb_from_weight(peso, "trasera"),
-                        "peso_min": peso * 0.85,
-                        "peso_max": peso * 1.15,
-                        "altura_min": 0,
-                        "altura_max": 0,
-                        "circunf_miembro_cm": 10,
-                        "talla": "estimada"
-                    }
-
-                st.session_state.breed_info = breed_info
-                st.session_state.detected_breed = manual_breed
-                if "current_case_id" in st.session_state:
-                    update_case_breed(DB_PATH, st.session_state.current_case_id, manual_breed)
-                st.success(f"Raza de trabajo definida: {manual_breed}. Ya podés continuar con la medición.")
-
-            st.divider()
-            st.subheader("Detección automática por foto")
-
-            if st.button("Detectar raza automáticamente", type="primary"):
-                best_results  = None
-                best_score    = 0.0
-                best_file_idx = 0
-
-                progress = st.progress(0, text="Analizando fotos...")
-
-                for idx, f in enumerate(uploaded):
-                    progress.progress(
-                        (idx + 1) / len(uploaded),
-                        text=f"Analizando foto {idx+1}/{len(uploaded)}..."
-                    )
-                    f.seek(0)
-                    img = Image.open(f).convert("RGB")
-                    try:
-                        results = detect_breed(img)
-                        if results and results[0]["score"] > best_score:
-                            best_score    = results[0]["score"]
-                            best_results  = results
-                            best_file_idx = idx
-                    except Exception:
-                        st.session_state["breed_detection_service_error"] = True
-                        continue
-
-                progress.empty()
-
-                _service_failed = st.session_state.pop("breed_detection_service_error", False)
-                if _service_failed and not best_results:
-                    st.warning("No se pudo completar la detección automática en este momento. Usá el selector de raza de trabajo para continuar el caso sin depender del servicio externo.")
-
-                if best_results:
-                    st.session_state.breed_results = best_results
-
-                    col_r, col_info = st.columns(2)
-                    with col_r:
-                        st.markdown("**Top 3 razas detectadas:**")
-                        for i, r in enumerate(best_results[:3]):
-                            name  = format_breed_name(r["label"])
-                            score = r["score"] * 100
-                            emoji = ["1.", "2.", "3."][i]
-                            st.markdown(f"{emoji} **{name}** — {score:.1f}%")
-                            st.progress(r["score"])
-
-                    top_breed  = format_breed_name(best_results[0]["label"])
-                    breed_info = get_breed_info(top_breed)
-
-                    # Fallback: buscar por palabras del nombre
-                    if not breed_info:
-                        for r in best_results:
-                            breed_info = get_breed_info(format_breed_name(r["label"]))
-                            if breed_info:
-                                top_breed = format_breed_name(r["label"])
-                                break
-
-                    with col_info:
-                        if breed_info:
-                            st.markdown(f"**Raza:** {top_breed}")
-                            st.metric("Peso promedio",
-                                      f"{breed_info['peso_min']}–{breed_info['peso_max']} kg")
-                            st.metric("Altura",
-                                      f"{breed_info['altura_min']}–{breed_info['altura_max']} cm")
-                            st.metric("Longitud miembro delantero",
-                                      f"~{breed_info['miembro_delantero_cm']} cm")
-                            st.metric("Longitud miembro trasero",
-                                      f"~{breed_info['miembro_trasero_cm']} cm")
-                            st.session_state.breed_info    = breed_info
-                            st.session_state.detected_breed = top_breed
-
-                            if "current_case_id" in st.session_state:
-                                update_case_breed(DB_PATH,
-                                                  st.session_state.current_case_id,
-                                                  top_breed)
-                        else:
-                            st.info(f"Raza detectada: **{top_breed}** — no está en la base de datos aún.")
-                            peso = case.get("peso_actual", 15)
-                            ext  = case.get("extremidad", "Delantera")
-                            est_del = estimate_limb_from_weight(peso, "delantera")
-                            est_tra = estimate_limb_from_weight(peso, "trasera")
-                            st.markdown(f"Estimación por peso ({peso} kg):")
-                            st.metric("Miembro delantero estimado", f"~{est_del} cm")
-                            st.metric("Miembro trasero estimado",  f"~{est_tra} cm")
-                            breed_info = {
-                                "miembro_delantero_cm": est_del,
-                                "miembro_trasero_cm":   est_tra,
-                                "peso_min": peso * 0.85,
-                                "peso_max": peso * 1.15,
-                                "altura_min": 0, "altura_max": 0,
-                                "circunf_miembro_cm": 10,
-                                "talla": "desconocida"
-                            }
-                            st.session_state.breed_info    = breed_info
-                            st.session_state.detected_breed = top_breed
-                elif not _service_failed:
-                    # Hubo fotos pero ninguna devolvió resultados de raza canina
-                    st.error("No se pudo detectar la raza. Verificá que las fotos muestren claramente al perro.")
-
-    # ── TAB 2: Medición ArUco ────────────────────────────────────────────────
-    with tab2:
-        st.subheader("Detección de marcador y medición")
-
-        if "uploaded_images" not in st.session_state:
-            st.info("Primero subí fotos en la pestaña anterior.")
-            return
-
-        imgs = st.session_state.uploaded_images
-        foto_idx = st.selectbox(
-            "Elegí la foto que tiene el marcador ArUco",
-            range(len(imgs)),
-            format_func=lambda x: f"Foto {x+1}"
+    with col_up:
+        uploaded = st.file_uploader(
+            "Seleccioná las fotos (JPG o PNG)",
+            type=["jpg", "jpeg", "png"],
+            accept_multiple_files=True,
+            key="foto_uploader"
         )
 
-        imgs[foto_idx].seek(0)
-        selected_img = Image.open(imgs[foto_idx]).convert("RGB")
-        img_array    = np.array(selected_img)
-
-        col_btn, col_info = st.columns([1, 2])
-        with col_btn:
-            if st.button("Detectar marcador ArUco", type="primary"):
-                with st.spinner("Buscando marcador..."):
-                    result_img, scale, found = detect_aruco(img_array.copy())
-
-                if found:
-                    st.session_state.scale_mm_per_px = scale
-                    st.session_state.aruco_result_img = result_img
-                    st.success(f" Marcador detectado\nEscala: **{scale:.4f} mm/px**")
-                else:
-                    st.error(" No se detectó el marcador. Probá con otra foto o mejorá la iluminación.")
-
-        with col_info:
-            if "scale_mm_per_px" in st.session_state:
-                sc = st.session_state.scale_mm_per_px
-                st.info(f" Escala activa: **{sc:.4f} mm/px**  \n"
-                        f"1 cm = {10/sc:.0f} píxeles en esta foto")
-
-        if "aruco_result_img" in st.session_state:
-            st.image(st.session_state.aruco_result_img,
-                     caption="Foto con marcador ArUco detectado", width="stretch")
-        else:
-            st.image(selected_img, width="stretch")
+    if uploaded:
+        st.session_state.uploaded_images = uploaded
+        cols = st.columns(min(len(uploaded), 4))
+        for i, f in enumerate(uploaded):
+            with cols[i % 4]:
+                f.seek(0)
+                st.image(Image.open(f), caption=f"Foto {i+1}", width="stretch")
 
         st.divider()
-        st.subheader(" Ingresá las medidas del muñón")
-        st.markdown("""
-        <div class="ache-info">
-        Medí estas dimensiones con una cinta métrica sobre la extremidad del animal.
-        Los valores de largo los podés confirmar con la foto y la escala calculada arriba.
-        </div>
-        """, unsafe_allow_html=True)
+        st.subheader("Paso 2 — Definir raza de trabajo")
+        st.caption("La detección automática es una ayuda. Si el servicio externo no responde o el perro es mestizo, definí la raza manualmente para continuar el flujo.")
 
-        col_m1, col_m2, col_m3 = st.columns(3)
-        with col_m1:
-            munon_largo = st.number_input(
-                "Largo del muñón (cm)", 0.0, 80.0,
-                st.session_state.get("measurements", {}).get("munon_largo_cm", 0.0),
-                0.1, help="Desde la articulación proximal hasta el extremo distal del muñón"
-            )
-        with col_m2:
-            circunf_base = st.number_input(
-                "Circunferencia en la base (cm)", 0.0, 80.0,
-                st.session_state.get("measurements", {}).get("munon_circunf_base_cm", 0.0),
-                0.1, help="La parte más gruesa del muñón, cerca de la articulación"
-            )
-        with col_m3:
-            circunf_distal = st.number_input(
-                "Circunferencia en el extremo (cm)", 0.0, 80.0,
-                st.session_state.get("measurements", {}).get("munon_circunf_distal_cm", 0.0),
-                0.1, help="La parte más estrecha, en el extremo del muñón (donde va el encaje)"
-            )
+        breed_names = ["Mestizo / sin raza definida"] + sorted(get_all_breed_names())
+        manual_default = case.get("raza_manual") or st.session_state.get("detected_breed") or "Mestizo / sin raza definida"
+        default_index = breed_names.index(manual_default) if manual_default in breed_names else 0
+        manual_breed = st.selectbox("Raza de trabajo", breed_names, index=default_index, key="manual_breed_working")
 
-        if st.button(" Guardar medidas", type="primary"):
-            meas = {
-                "munon_largo_cm":          munon_largo,
-                "munon_circunf_base_cm":   circunf_base,
-                "munon_circunf_distal_cm": circunf_distal,
-                "scale_mm_per_px": st.session_state.get("scale_mm_per_px"),
-            }
-            st.session_state.measurements = meas
+        if st.button("Usar esta raza para el caso", type="secondary"):
+            peso = float(case.get("peso_actual", 15) or 15)
+            if manual_breed == "Mestizo / sin raza definida":
+                est_del = estimate_limb_from_weight(peso, "delantera")
+                est_tra = estimate_limb_from_weight(peso, "trasera")
+                breed_info = {
+                    "miembro_delantero_cm": est_del,
+                    "miembro_trasero_cm": est_tra,
+                    "peso_min": peso * 0.85,
+                    "peso_max": peso * 1.15,
+                    "altura_min": 0,
+                    "altura_max": 0,
+                    "circunf_miembro_cm": 10,
+                    "talla": "sin raza definida"
+                }
+            else:
+                breed_info = get_breed_info(manual_breed) or {
+                    "miembro_delantero_cm": estimate_limb_from_weight(peso, "delantera"),
+                    "miembro_trasero_cm": estimate_limb_from_weight(peso, "trasera"),
+                    "peso_min": peso * 0.85,
+                    "peso_max": peso * 1.15,
+                    "altura_min": 0,
+                    "altura_max": 0,
+                    "circunf_miembro_cm": 10,
+                    "talla": "estimada"
+                }
 
+            st.session_state.breed_info = breed_info
+            st.session_state.detected_breed = manual_breed
             if "current_case_id" in st.session_state:
-                save_measurements(
-                    DB_PATH,
-                    st.session_state.current_case_id,
-                    meas,
-                    st.session_state.get("breed_info")
+                update_case_breed(DB_PATH, st.session_state.current_case_id, manual_breed)
+            st.success(f"Raza de trabajo definida: {manual_breed}. Ya podés continuar con la medición.")
+
+        st.divider()
+        st.subheader("Detección automática opcional")
+
+        if st.button("Detectar raza automáticamente", type="primary"):
+            best_results  = None
+            best_score    = 0.0
+            best_file_idx = 0
+
+            progress = st.progress(0, text="Analizando fotos...")
+
+            for idx, f in enumerate(uploaded):
+                progress.progress(
+                    (idx + 1) / len(uploaded),
+                    text=f"Analizando foto {idx+1}/{len(uploaded)}..."
                 )
+                f.seek(0)
+                img = Image.open(f).convert("RGB")
+                try:
+                    results = detect_breed(img)
+                    if results and results[0]["score"] > best_score:
+                        best_score    = results[0]["score"]
+                        best_results  = results
+                        best_file_idx = idx
+                except Exception:
+                    st.session_state["breed_detection_service_error"] = True
+                    continue
 
-            st.success(" Medidas guardadas correctamente.")
+            progress.empty()
 
-    # ── TAB 3: Resumen ────────────────────────────────────────────────────────
-    with tab3:
-        st.subheader(" Resumen de medidas")
+            _service_failed = st.session_state.pop("breed_detection_service_error", False)
+            if _service_failed and not best_results:
+                st.warning("No se pudo completar la detección automática en este momento. Usá el selector de raza de trabajo para continuar el caso sin depender del servicio externo.")
 
-        if "measurements" not in st.session_state:
-            st.info("Completá las medidas en la pestaña **Medición con ArUco**.")
-            return
+            if best_results:
+                st.session_state.breed_results = best_results
 
-        m  = st.session_state.measurements
-        bi = st.session_state.get("breed_info", {})
+                col_r, col_info = st.columns(2)
+                with col_r:
+                    st.markdown("**Top 3 razas detectadas:**")
+                    for i, r in enumerate(best_results[:3]):
+                        name  = format_breed_name(r["label"])
+                        score = r["score"] * 100
+                        emoji = ["1.", "2.", "3."][i]
+                        st.markdown(f"{emoji} **{name}** — {score:.1f}%")
+                        st.progress(r["score"])
 
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            st.metric("Largo del muñón", f"{m['munon_largo_cm']} cm")
-        with col2:
-            st.metric("Circunf. base",   f"{m['munon_circunf_base_cm']} cm")
-        with col3:
-            st.metric("Circunf. distal", f"{m['munon_circunf_distal_cm']} cm")
+                top_breed  = format_breed_name(best_results[0]["label"])
+                breed_info = get_breed_info(top_breed)
 
-        if bi:
-            extremidad = case.get("extremidad", "Delantera Izquierda")
-            long_ref   = (bi.get("miembro_delantero_cm", 0)
-                          if "Delantera" in extremidad
-                          else bi.get("miembro_trasero_cm", 0))
+                # Fallback: buscar por palabras del nombre
+                if not breed_info:
+                    for r in best_results:
+                        breed_info = get_breed_info(format_breed_name(r["label"]))
+                        if breed_info:
+                            top_breed = format_breed_name(r["label"])
+                            break
 
-            long_prot = max(0.0, long_ref - m["munon_largo_cm"])
+                with col_info:
+                    if breed_info:
+                        st.markdown(f"**Raza:** {top_breed}")
+                        st.metric("Peso promedio",
+                                  f"{breed_info['peso_min']}–{breed_info['peso_max']} kg")
+                        st.metric("Altura",
+                                  f"{breed_info['altura_min']}–{breed_info['altura_max']} cm")
+                        st.metric("Longitud miembro delantero",
+                                  f"~{breed_info['miembro_delantero_cm']} cm")
+                        st.metric("Longitud miembro trasero",
+                                  f"~{breed_info['miembro_trasero_cm']} cm")
+                        st.session_state.breed_info    = breed_info
+                        st.session_state.detected_breed = top_breed
 
-            st.divider()
-            col_a, col_b = st.columns(2)
-            with col_a:
-                st.metric("Longitud total del miembro (referencia raza)", f"{long_ref} cm")
-            with col_b:
-                st.metric("Longitud estimada de la prótesis", f"{long_prot:.1f} cm",
-                          delta=f"Raza: {st.session_state.get('detected_breed', '—')}")
+                        if "current_case_id" in st.session_state:
+                            update_case_breed(DB_PATH,
+                                              st.session_state.current_case_id,
+                                              top_breed)
+                    else:
+                        st.info(f"Raza detectada: **{top_breed}** — no está en la base de datos aún.")
+                        peso = case.get("peso_actual", 15)
+                        ext  = case.get("extremidad", "Delantera")
+                        est_del = estimate_limb_from_weight(peso, "delantera")
+                        est_tra = estimate_limb_from_weight(peso, "trasera")
+                        st.markdown(f"Estimación por peso ({peso} kg):")
+                        st.metric("Miembro delantero estimado", f"~{est_del} cm")
+                        st.metric("Miembro trasero estimado",  f"~{est_tra} cm")
+                        breed_info = {
+                            "miembro_delantero_cm": est_del,
+                            "miembro_trasero_cm":   est_tra,
+                            "peso_min": peso * 0.85,
+                            "peso_max": peso * 1.15,
+                            "altura_min": 0, "altura_max": 0,
+                            "circunf_miembro_cm": 10,
+                            "talla": "desconocida"
+                        }
+                        st.session_state.breed_info    = breed_info
+                        st.session_state.detected_breed = top_breed
+            elif not _service_failed:
+                # Hubo fotos pero ninguna devolvió resultados de raza canina
+                st.error("No se pudo detectar la raza. Verificá que las fotos muestren claramente al perro.")
 
-            st.session_state.prosthetic_length = long_prot
+    # ── PASO 2: Medición ArUco ───────────────────────────────────────────────
+    st.subheader("Paso 3 — Detectar escala y cargar medidas")
 
+    if "uploaded_images" not in st.session_state:
+        st.info("Primero subí fotos en el paso anterior.")
+        return
+
+    imgs = st.session_state.uploaded_images
+    foto_idx = st.selectbox(
+        "Elegí la foto que tiene el marcador ArUco",
+        range(len(imgs)),
+        format_func=lambda x: f"Foto {x+1}"
+    )
+
+    imgs[foto_idx].seek(0)
+    selected_img = Image.open(imgs[foto_idx]).convert("RGB")
+    img_array    = np.array(selected_img)
+
+    col_btn, col_info = st.columns([1, 2])
+    with col_btn:
+        if st.button("Detectar marcador ArUco", type="primary"):
+            with st.spinner("Buscando marcador..."):
+                result_img, scale, found = detect_aruco(img_array.copy())
+
+            if found:
+                st.session_state.scale_mm_per_px = scale
+                st.session_state.aruco_result_img = result_img
+                st.success(f" Marcador detectado\nEscala: **{scale:.4f} mm/px**")
+            else:
+                st.error(" No se detectó el marcador. Probá con otra foto o mejorá la iluminación.")
+
+    with col_info:
+        if "scale_mm_per_px" in st.session_state:
+            sc = st.session_state.scale_mm_per_px
+            st.info(f" Escala activa: **{sc:.4f} mm/px**  \n"
+                    f"1 cm = {10/sc:.0f} píxeles en esta foto")
+
+    if "aruco_result_img" in st.session_state:
+        st.image(st.session_state.aruco_result_img,
+                 caption="Foto con marcador ArUco detectado", width="stretch")
+    else:
+        st.image(selected_img, width="stretch")
+
+    st.divider()
+    st.subheader(" Ingresá las medidas del muñón")
+    st.markdown("""
+    <div class="ache-info">
+    Medí estas dimensiones con una cinta métrica sobre la extremidad del animal.
+    Los valores de largo los podés confirmar con la foto y la escala calculada arriba.
+    </div>
+    """, unsafe_allow_html=True)
+
+    col_m1, col_m2, col_m3 = st.columns(3)
+    with col_m1:
+        munon_largo = st.number_input(
+            "Largo del muñón (cm)", 0.0, 80.0,
+            st.session_state.get("measurements", {}).get("munon_largo_cm", 0.0),
+            0.1, help="Desde la articulación proximal hasta el extremo distal del muñón"
+        )
+    with col_m2:
+        circunf_base = st.number_input(
+            "Circunferencia en la base (cm)", 0.0, 80.0,
+            st.session_state.get("measurements", {}).get("munon_circunf_base_cm", 0.0),
+            0.1, help="La parte más gruesa del muñón, cerca de la articulación"
+        )
+    with col_m3:
+        circunf_distal = st.number_input(
+            "Circunferencia en el extremo (cm)", 0.0, 80.0,
+            st.session_state.get("measurements", {}).get("munon_circunf_distal_cm", 0.0),
+            0.1, help="La parte más estrecha, en el extremo del muñón (donde va el encaje)"
+        )
+
+    if st.button(" Guardar medidas", type="primary"):
+        meas = {
+            "munon_largo_cm":          munon_largo,
+            "munon_circunf_base_cm":   circunf_base,
+            "munon_circunf_distal_cm": circunf_distal,
+            "scale_mm_per_px": st.session_state.get("scale_mm_per_px"),
+        }
+        st.session_state.measurements = meas
+
+        if "current_case_id" in st.session_state:
+            save_measurements(
+                DB_PATH,
+                st.session_state.current_case_id,
+                meas,
+                st.session_state.get("breed_info")
+            )
+
+        st.success(" Medidas guardadas correctamente.")
+
+    # ── PASO 3: Resumen ──────────────────────────────────────────────────────
+    st.subheader(" Paso 4 — Resumen de medidas")
+
+    if "measurements" not in st.session_state:
+        st.info("Completá primero la medición con ArUco y las medidas del muñón.")
+        return
+
+    m  = st.session_state.measurements
+    bi = st.session_state.get("breed_info", {})
+
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric("Largo del muñón", f"{m['munon_largo_cm']} cm")
+    with col2:
+        st.metric("Circunf. base",   f"{m['munon_circunf_base_cm']} cm")
+    with col3:
+        st.metric("Circunf. distal", f"{m['munon_circunf_distal_cm']} cm")
+
+    if bi:
+        extremidad = case.get("extremidad", "Delantera Izquierda")
+        long_ref   = (bi.get("miembro_delantero_cm", 0)
+                      if "Delantera" in extremidad
+                      else bi.get("miembro_trasero_cm", 0))
+
+        long_prot = max(0.0, long_ref - m["munon_largo_cm"])
+
+        st.divider()
+        col_a, col_b = st.columns(2)
+        with col_a:
+            st.metric("Longitud total del miembro (referencia raza)", f"{long_ref} cm")
+        with col_b:
+            st.metric("Longitud estimada de la prótesis", f"{long_prot:.1f} cm",
+                      delta=f"Raza: {st.session_state.get('detected_breed', '—')}")
+
+        st.session_state.prosthetic_length = long_prot
 
 # ─────────────────────────────────────────────────────────────────────────────
 # PÁGINA: DISEÑO DE PRÓTESIS
