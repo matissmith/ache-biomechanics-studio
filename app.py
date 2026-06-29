@@ -2065,9 +2065,51 @@ def page_analisis():
                     st.image(Image.open(f), caption=f"Foto {i+1}", width="stretch")
 
             st.divider()
-            st.subheader("Detección automática de raza")
+            st.subheader("Raza del paciente")
+            st.caption("La detección automática es una ayuda. Si el servicio externo no responde o el perro es mestizo, definí la raza manualmente para continuar el flujo.")
 
-            if st.button("Detectar raza", type="primary"):
+            breed_names = ["Mestizo / sin raza definida"] + sorted(get_all_breed_names())
+            manual_default = case.get("raza_manual") or st.session_state.get("detected_breed") or "Mestizo / sin raza definida"
+            default_index = breed_names.index(manual_default) if manual_default in breed_names else 0
+            manual_breed = st.selectbox("Raza de trabajo", breed_names, index=default_index, key="manual_breed_working")
+
+            if st.button("Usar esta raza para el caso", type="secondary"):
+                peso = float(case.get("peso_actual", 15) or 15)
+                if manual_breed == "Mestizo / sin raza definida":
+                    est_del = estimate_limb_from_weight(peso, "delantera")
+                    est_tra = estimate_limb_from_weight(peso, "trasera")
+                    breed_info = {
+                        "miembro_delantero_cm": est_del,
+                        "miembro_trasero_cm": est_tra,
+                        "peso_min": peso * 0.85,
+                        "peso_max": peso * 1.15,
+                        "altura_min": 0,
+                        "altura_max": 0,
+                        "circunf_miembro_cm": 10,
+                        "talla": "sin raza definida"
+                    }
+                else:
+                    breed_info = get_breed_info(manual_breed) or {
+                        "miembro_delantero_cm": estimate_limb_from_weight(peso, "delantera"),
+                        "miembro_trasero_cm": estimate_limb_from_weight(peso, "trasera"),
+                        "peso_min": peso * 0.85,
+                        "peso_max": peso * 1.15,
+                        "altura_min": 0,
+                        "altura_max": 0,
+                        "circunf_miembro_cm": 10,
+                        "talla": "estimada"
+                    }
+
+                st.session_state.breed_info = breed_info
+                st.session_state.detected_breed = manual_breed
+                if "current_case_id" in st.session_state:
+                    update_case_breed(DB_PATH, st.session_state.current_case_id, manual_breed)
+                st.success(f"Raza de trabajo definida: {manual_breed}. Ya podés continuar con la medición.")
+
+            st.divider()
+            st.subheader("Detección automática por foto")
+
+            if st.button("Detectar raza automáticamente", type="primary"):
                 best_results  = None
                 best_score    = 0.0
                 best_file_idx = 0
@@ -2095,7 +2137,7 @@ def page_analisis():
 
                 _service_failed = st.session_state.pop("breed_detection_service_error", False)
                 if _service_failed and not best_results:
-                    st.warning("No se pudo completar la detección automática en este momento. Podés cargar la raza manualmente o continuar el caso como mestizo/sin raza definida.")
+                    st.warning("No se pudo completar la detección automática en este momento. Usá el selector de raza de trabajo para continuar el caso sin depender del servicio externo.")
 
                 if best_results:
                     st.session_state.breed_results = best_results
