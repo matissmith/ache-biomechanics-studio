@@ -31,7 +31,7 @@ def _card(content_fn, border_color=BLUE, bg="#F0F4FA"):
 def _alert(title, items, color=RED, bg="#FDF3F3"):
     html = (f"<div style='border-left:4px solid {color};background:{bg};"
             f"padding:10px 14px;border-radius:0 6px 6px 0;margin:8px 0;'>"
-            f"<strong style='color:{color};'>⚠  {title}</strong>"
+            f"<strong style='color:{color};'>Advertencia  {title}</strong>"
             f"<ul style='margin:6px 0 0 0;padding-left:18px;font-size:.92em;color:#26384A !important;'>")
     for item in items:
         html += f"<li>{item}</li>"
@@ -231,10 +231,10 @@ _NIVEL_NOTAS = {
     5: ("Buena aptitud", GREEN,
         "La articulación proximal (codo o stifle) está preservada — punto de apoyo estable. "
         "El socket puede ser más simple. Necesita articulación protésica distal (codo externo o stifle externo)."),
-    6: ("Óptima ✓", GREEN,
+    6: ("Óptima •", GREEN,
         "Mejor escenario funcional. La articulación proximal y la palanca ósea permiten marcha "
         "eficiente. Socket convencional, sin articulación intermedia necesaria. Retorno elástico en pie."),
-    7: ("Excelente ✓", GREEN,
+    7: ("Excelente •", GREEN,
         "Amputación parcial distal (carpo/tarso o dedos). Mínima pérdida funcional. "
         "Bota protésica o pie parcial. Adaptación muy rápida y pronóstico excelente."),
 }
@@ -264,7 +264,7 @@ def render_guia_quirurgica(caso_activo: dict = None):
                 border-radius:16px;padding:16px 18px;margin:0 0 16px 0;
                 box-shadow:0 10px 24px rgba(23,53,85,.06);">
         <div style="color:#173555;font-weight:900;font-size:1.12rem;">
-            🩺 Guía técnica · v0.2 — personalizada al caso
+             Guía técnica · v0.2 — personalizada al caso
         </div>
         <div style="color:#5B6E82;font-weight:600;margin-top:5px;">
             Evaluación de muñón protetizable · Ache Innovation
@@ -294,13 +294,13 @@ def render_guia_quirurgica(caso_activo: dict = None):
         peso_proto  = _peso_max_protesis(peso) if peso != "—" else "—"
 
         # Determinar tipo de extremidad para mostrar
-        tipo_ext = "🦾 Torácica" if _es_delantera(ext) else "🦵 Pelviana"
+        tipo_ext = " Torácica" if _es_delantera(ext) else " Pelviana"
 
         st.markdown(f"""
         <div style="background:#F0F6FF;border:1px solid #C9D8E8;border-radius:14px;
                     padding:14px 18px;margin-bottom:12px;">
             <div style="font-weight:900;color:{NAVY};font-size:1.05rem;margin-bottom:10px;">
-                📋 Caso activo: <span style="color:{BLUE};">{nombre}</span>
+                 Caso activo: <span style="color:{BLUE};">{nombre}</span>
                 <span style="font-weight:400;font-size:.9rem;color:#5B6E82;"> · {raza}</span>
             </div>
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;font-size:.92rem;">
@@ -323,12 +323,12 @@ def render_guia_quirurgica(caso_activo: dict = None):
         # Alertas automáticas inmediatas
         causa_lower = causa_str.lower()
         if "oncol" in causa_lower or "tumor" in causa_lower:
-            _alert("⚠ Alerta oncológica automática",
+            _alert("Advertencia Alerta oncológica automática",
                    ["Causa oncológica registrada en el caso.",
                     "La preservación del muñón puede estar contraindicada si compromete márgenes.",
                     "Derivar inmediatamente a evaluación oncológica veterinaria."])
         if bcs_val and bcs_val >= 8:
-            _alert(f"⚠ BCS {bcs_val}/9 — Obesidad severa",
+            _alert(f"Advertencia BCS {bcs_val}/9 — Obesidad severa",
                    [f"BCS {bcs_val} contraindica el ajuste protésico hasta reducción de peso.",
                     "El exceso de carga puede causar lesiones en el muñón y el miembro contralateral."],
                    color=ORANGE, bg="#FFF8EE")
@@ -341,7 +341,7 @@ def render_guia_quirurgica(caso_activo: dict = None):
 
     st.markdown("---")
 
-    with st.expander("📋  Uso previsto y límites de este documento", expanded=False):
+    with st.expander("  Uso previsto y límites de este documento", expanded=False):
         st.markdown(
             "_Documento de apoyo. No es una guía quirúrgica autónoma. "
             "No reemplaza evaluación clínica, radiográfica, oncológica, anestésica "
@@ -351,13 +351,13 @@ def render_guia_quirurgica(caso_activo: dict = None):
     st.markdown("<br>", unsafe_allow_html=True)
 
     tabs = st.tabs([
-        "⚕️ Clínico",
-        "📐 Biomecánica & Niveles",
-        "📊 Clasificación",
-        "🔩 Diseño protésico",
-        "🗓 Adaptación",
-        "✅ Checklists",
-        "📚 Referencia",
+        "Clínico Clínico",
+        " Biomecánica & Niveles",
+        " Clasificación",
+        " Diseño protésico",
+        " Adaptación",
+        " Checklists",
+        " Referencia",
     ])
 
     # ══════════════════════════════════════════════════════════════════════════
@@ -418,7 +418,7 @@ def render_guia_quirurgica(caso_activo: dict = None):
             "Tutor comprometido con el protocolo de adaptación."
         ]:
             # Marcar visualmente si el caso activo viola alguna condición
-            bcs_flag = "⚠ " if (bcs_caso and bcs_caso >= 8 and "BCS" in c) else ""
+            bcs_flag = "Advertencia " if (bcs_caso and bcs_caso >= 8 and "BCS" in c) else ""
             st.markdown(f"• {bcs_flag}{c}")
 
         _section_header(5, "Contraindicaciones y alertas de alto riesgo")
@@ -496,8 +496,8 @@ def render_guia_quirurgica(caso_activo: dict = None):
                     ["3", "Transhumeral proximal",     ">50% del húmero retirado",             "Corta",    ("Factible *", ORANGE),      "Requiere codo protésico."],
                     ["4", "Transhumeral medio/distal", "<50% del húmero retirado",             "Moderada", ("Factible", ORANGE),        "Mejor palanca; codo protésico necesario."],
                     ["5", "Desart. del codo",          "Húmero completo preservado",           "Buena",    ("Buena", GREEN),            "Suspensión estable; codo externo requerido."],
-                    ["6", "Transradial",               "Radio/cúbito parcial o completo",      "Óptima",   ("Óptima ✓", GREEN),         "Mejor escenario; codo preservado."],
-                    ["7", "Desart. carpo / parcial",   "Carpo, metacarpo o dedos",             "Completa", ("Excelente ✓", GREEN),      "Casos más simples; bota o pie parcial."],
+                    ["6", "Transradial",               "Radio/cúbito parcial o completo",      "Óptima",   ("Óptima •", GREEN),         "Mejor escenario; codo preservado."],
+                    ["7", "Desart. carpo / parcial",   "Carpo, metacarpo o dedos",             "Completa", ("Excelente •", GREEN),      "Casos más simples; bota o pie parcial."],
                 ], col_widths=["4%","17%","22%","9%","13%","35%"])
         else:
             _html_table(
@@ -508,8 +508,8 @@ def render_guia_quirurgica(caso_activo: dict = None):
                     ["3", "Transfemoral proximal",      ">50% del fémur retirado",              "Corta",    ("Factible *", ORANGE),      "Requiere rodilla protésica (stifle)."],
                     ["4", "Transfemoral medio/distal",  "<50% del fémur retirado",              "Moderada", ("Factible", ORANGE),        "Rodilla protésica; mejor control."],
                     ["5", "Desart. del stifle",         "Fémur completo preservado",            "Buena",    ("Buena", GREEN),            "Palanca excelente; stifle externo requerido."],
-                    ["6", "Transtibial",                "Tibia/fíbula parcial o completa",      "Óptima",   ("Óptima ✓", GREEN),         "Mejor escenario; stifle preservado = propulsión."],
-                    ["7", "Desart. tarso / parcial",    "Tarso, metatarso o dedos",             "Completa", ("Excelente ✓", GREEN),      "Casos más simples; bota o pie parcial."],
+                    ["6", "Transtibial",                "Tibia/fíbula parcial o completa",      "Óptima",   ("Óptima •", GREEN),         "Mejor escenario; stifle preservado = propulsión."],
+                    ["7", "Desart. tarso / parcial",    "Tarso, metatarso o dedos",             "Completa", ("Excelente •", GREEN),      "Casos más simples; bota o pie parcial."],
                 ], col_widths=["4%","17%","22%","9%","13%","35%"])
 
         st.caption("* Factible con restricciones — requiere evaluación avanzada. Niveles 1-2: no recomendados.")
@@ -521,7 +521,7 @@ def render_guia_quirurgica(caso_activo: dict = None):
             <div style="border-left:4px solid {apt_color};background:#F8FAFD;
                         padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0;">
                 <strong style="color:{apt_color};">
-                    🎯 Caso activo — Nivel {nivel_actual}: {apt_label}
+                     Caso activo — Nivel {nivel_actual}: {apt_label}
                 </strong>
                 <p style="margin:6px 0 0 0;color:#26384A;font-size:.94em;">{apt_nota}</p>
             </div>
@@ -572,7 +572,7 @@ def render_guia_quirurgica(caso_activo: dict = None):
                 "C": "No recomendado sin evaluación avanzada",
                 "D": "Información insuficiente",
             }
-            st.markdown("#### 🤖 Clasificación automática del caso activo")
+            st.markdown("####  Clasificación automática del caso activo")
             _compat_box(nivel_auto, titulos[nivel_auto], razones_auto, color_auto, bg_auto)
             st.markdown("---")
 
@@ -679,18 +679,18 @@ def render_guia_quirurgica(caso_activo: dict = None):
             <div style="background:#F0F6FF;border:1px solid #B8D0EE;border-radius:14px;
                         padding:14px 18px;margin-bottom:14px;">
                 <div style="font-weight:900;color:{NAVY};font-size:1.0rem;margin-bottom:8px;">
-                    🐾 Recomendaciones para talla <b>{spec['label']}</b>
+                     Recomendaciones para talla <b>{spec['label']}</b>
                 </div>
                 <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;font-size:.92rem;color:#26384A;">
-                    <div>📦 <b>Pared socket:</b> {spec['socket_pared']}</div>
-                    <div>🧴 <b>Liner:</b> {spec['liner']}</div>
-                    <div>🔩 <b>Material estructura:</b> {spec['material']}</div>
-                    <div>⚖️ <b>Peso máx. prótesis:</b> {spec['peso_max_proto']}</div>
-                    <div>👟 <b>Pie protésico:</b> {spec['pie']}</div>
-                    <div>🎗️ <b>Suspensión:</b> {spec['suspension']}</div>
+                    <div> <b>Pared socket:</b> {spec['socket_pared']}</div>
+                    <div> <b>Liner:</b> {spec['liner']}</div>
+                    <div> <b>Material estructura:</b> {spec['material']}</div>
+                    <div> <b>Peso máx. prótesis:</b> {spec['peso_max_proto']}</div>
+                    <div> <b>Pie protésico:</b> {spec['pie']}</div>
+                    <div> <b>Suspensión:</b> {spec['suspension']}</div>
                 </div>
                 <p style="margin:10px 0 0 0;font-size:.89em;color:#4A5E72;border-top:1px solid #C9D8E8;padding-top:8px;">
-                    ⚠ {spec['nota']}
+                    Advertencia {spec['nota']}
                 </p>
             </div>
             """, unsafe_allow_html=True)
@@ -706,15 +706,15 @@ def render_guia_quirurgica(caso_activo: dict = None):
                 <div style="background:#F5F7FA;border:1px solid #C9D8E8;border-radius:14px;
                             padding:14px 18px;margin-bottom:14px;">
                     <div style="font-weight:900;color:{NAVY};font-size:1.0rem;margin-bottom:8px;">
-                        🐾 Recomendaciones estimadas por peso ({peso_caso} kg → {spec['label']})
+                         Recomendaciones estimadas por peso ({peso_caso} kg → {spec['label']})
                     </div>
                     <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px;font-size:.92rem;color:#26384A;">
-                        <div>📦 <b>Pared socket:</b> {spec['socket_pared']}</div>
-                        <div>🧴 <b>Liner:</b> {spec['liner']}</div>
-                        <div>🔩 <b>Material:</b> {spec['material']}</div>
-                        <div>⚖️ <b>Peso máx. prótesis:</b> {spec['peso_max_proto']}</div>
-                        <div>👟 <b>Pie:</b> {spec['pie']}</div>
-                        <div>🎗️ <b>Suspensión:</b> {spec['suspension']}</div>
+                        <div> <b>Pared socket:</b> {spec['socket_pared']}</div>
+                        <div> <b>Liner:</b> {spec['liner']}</div>
+                        <div> <b>Material:</b> {spec['material']}</div>
+                        <div> <b>Peso máx. prótesis:</b> {spec['peso_max_proto']}</div>
+                        <div> <b>Pie:</b> {spec['pie']}</div>
+                        <div> <b>Suspensión:</b> {spec['suspension']}</div>
                     </div>
                 </div>
                 """, unsafe_allow_html=True)
@@ -727,7 +727,7 @@ def render_guia_quirurgica(caso_activo: dict = None):
             <div style="background:#F0FFF4;border:1px solid #A8D5B5;border-radius:12px;
                         padding:12px 16px;margin-bottom:12px;">
                 <div style="font-weight:800;color:{GREEN};margin-bottom:6px;">
-                    ✅ Diseño paramétrico actual
+                     Diseño paramétrico actual
                 </div>
                 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;font-size:.91rem;color:#26384A;">
                     <div><b>Longitud total:</b> {_val(specs_caso['longitud'], ' cm')}</div>

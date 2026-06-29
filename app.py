@@ -40,7 +40,7 @@ init_db(DB_PATH)
 
 st.set_page_config(
     page_title="Ache Innovation",
-    page_icon="🐾",
+    page_icon=None,
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -1549,23 +1549,23 @@ iframe{border-radius:22px!important;box-shadow:0 18px 52px rgba(10,37,96,.11)!im
 # ─────────────────────────────────────────────────────────────────────────────
 
 NAV_OPTIONS = [
-    "🏠 Inicio software",
-    "🐕 Biomechanics Studio",
-    "📸 Fotos y análisis",
-    "🦿 Diseño biomecánico",
-    "🩺 Guía quirúrgica",
-    "📄 Reporte",
-    "🗄 Historial",
+    "Inicio",
+    "Nuevo caso",
+    "Análisis de imágenes",
+    "Diseño CAD",
+    "Guía clínica",
+    "Reporte",
+    "Historial",
 ]
 
 NAV_MAPPING = {
-    "🏠 Inicio software": "🏠  Inicio",
-    "🐕 Biomechanics Studio": "🐕  Nuevo Caso",
-    "📸 Fotos y análisis": "📸  Análisis de Imágenes",
-    "🦿 Diseño biomecánico": "🦴  Diseño de Prótesis",
-    "🩺 Guía quirúrgica": "🔪  Guía Quirúrgica",
-    "📄 Reporte": "📋  Generar Reporte",
-    "🗄 Historial": "🗄️  Historial de Casos",
+    "Inicio": "Inicio",
+    "Nuevo caso": "Nuevo caso",
+    "Análisis de imágenes": "Análisis",
+    "Diseño CAD": "Diseño CAD",
+    "Guía clínica": "Guía clínica",
+    "Reporte": "Reporte",
+    "Historial": "Historial",
 }
 
 
@@ -1595,13 +1595,13 @@ def render_brand_header():
     """, unsafe_allow_html=True)
 
 PAGE_KEYS = {
-    "caso": ("🐕 Biomechanics Studio", "🐕  Nuevo Caso"),
-    "inicio": ("🏠 Inicio software", "🏠  Inicio"),
-    "fotos": ("📸 Fotos y análisis", "📸  Análisis de Imágenes"),
-    "diseno": ("🦿 Diseño biomecánico", "🦴  Diseño de Prótesis"),
-    "guia": ("🩺 Guía quirúrgica", "🔪  Guía Quirúrgica"),
-    "reporte": ("📄 Reporte", "📋  Generar Reporte"),
-    "historial": ("🗄 Historial", "🗄️  Historial de Casos"),
+    "caso": ("Nuevo caso", "Nuevo caso"),
+    "inicio": ("Inicio", "Inicio"),
+    "fotos": ("Análisis de imágenes", "Análisis"),
+    "diseno": ("Diseño CAD", "Diseño CAD"),
+    "guia": ("Guía clínica", "Guía clínica"),
+    "reporte": ("Reporte", "Reporte"),
+    "historial": ("Historial", "Historial"),
 }
 DISPLAY_TO_KEY = {display: key for key, (display, internal) in PAGE_KEYS.items()}
 INTERNAL_TO_KEY = {internal: key for key, (display, internal) in PAGE_KEYS.items()}
@@ -1623,7 +1623,7 @@ def _embed_page_internal():
     key = st.query_params.get("page", "caso")
     return PAGE_KEYS.get(key, PAGE_KEYS["caso"])[1]
 
-def _ensure_nav_state(default="🏠 Inicio software"):
+def _ensure_nav_state(default="Inicio"):
     if "active_nav" not in st.session_state:
         query_key = _query_page_key()
         query_display, _ = PAGE_KEYS[query_key]
@@ -1636,13 +1636,13 @@ def _ensure_nav_state(default="🏠 Inicio software"):
 def _sync_nav_from_sidebar():
     # Callback de radio: solo actualiza la fuente de verdad.
     # No toca otras keys de widgets porque Streamlit puede considerarlas ya instanciadas.
-    selected = st.session_state.get("sidebar_nav", "🏠 Inicio software")
+    selected = st.session_state.get("sidebar_nav", "Inicio")
     st.session_state.active_nav = selected
 
 
 def _sync_nav_from_top():
     # Callback de radio: solo actualiza la fuente de verdad.
-    selected = st.session_state.get("top_nav_radio", "🏠 Inicio software")
+    selected = st.session_state.get("top_nav_radio", "Inicio")
     st.session_state.active_nav = selected
 
 
@@ -1653,7 +1653,7 @@ def _go_to_page(key):
         st.session_state.active_nav = PAGE_KEYS[key][0]
         st.rerun()
 
-def render_top_navigation(default_page_label="🏠 Inicio software"):
+def render_top_navigation(default_page_label="Inicio"):
     """Pill navigation using horizontal st.radio — clean, no ugly buttons."""
     active_display = st.session_state.get("active_nav", default_page_label)
     if active_display not in NAV_OPTIONS:
@@ -1703,7 +1703,7 @@ def render_sidebar():
             st.markdown("""
             <div style="background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12); border-radius:14px; padding:12px;">
               <div style="font-size:.78rem; opacity:.7; text-transform:uppercase; letter-spacing:.08em;">Caso activo</div>
-              <div style="font-size:1.05rem; font-weight:800; margin-top:4px;">🐶 %s</div>
+              <div style="font-size:1.05rem; font-weight:800; margin-top:4px;">%s</div>
               <div style="font-size:.9rem; opacity:.82; margin-top:2px;">%s</div>
             </div>
             """ % (c.get('nombre_perro', 'Sin nombre'), c.get('extremidad', 'Extremidad no definida')), unsafe_allow_html=True)
@@ -1903,17 +1903,17 @@ def page_inicio():
     <section class="ache-purpose-map">
       <div class="ache-kicker">Recorrido operativo</div>
       <h3>Qué hace cada módulo y cuándo corresponde usarlo</h3>
-      <div class="ache-purpose-row"><b>🐕 Nuevo caso</b><span>Registro inicial del paciente, tutor, peso, extremidad afectada, estado actual y notas clínicas. Es obligatorio para dar contexto al resto del sistema.</span><div class="ache-purpose-tag">Inicio</div></div>
-      <div class="ache-purpose-row"><b>📸 Fotos y análisis</b><span>Carga de imágenes y extracción/registro de información morfológica. Se usa después de abrir el caso, antes de diseñar.</span><div class="ache-purpose-tag">Datos de entrada</div></div>
-      <div class="ache-purpose-row"><b>🦿 Diseño biomecánico</b><span>Generación paramétrica del modelo conceptual: encaje/socket, largo, apoyo, arquitectura y archivo 3D revisable.</span><div class="ache-purpose-tag">Resultado técnico</div></div>
-      <div class="ache-purpose-row"><b>🩺 Guía clínica</b><span>Material de apoyo para evaluar compatibilidad protésica externa, alertas, requisitos del muñón y comunicación con profesionales.</span><div class="ache-purpose-tag">Revisión profesional</div></div>
-      <div class="ache-purpose-row"><b>📄 Reporte</b><span>Documento de salida para compartir el caso con veterinario, rehabilitador, fabricante o equipo interno.</span><div class="ache-purpose-tag">Entrega</div></div>
-      <div class="ache-purpose-row"><b>🗄 Historial</b><span>Recuperación de casos ya cargados. No es un paso obligatorio dentro de un caso nuevo.</span><div class="ache-purpose-tag">Archivo</div></div>
+      <div class="ache-purpose-row"><b>Nuevo caso</b><span>Registro inicial del paciente, tutor, peso, extremidad afectada, estado actual y notas clínicas. Es obligatorio para dar contexto al resto del sistema.</span><div class="ache-purpose-tag">Inicio</div></div>
+      <div class="ache-purpose-row"><b>Análisis de imágenes</b><span>Carga de imágenes y extracción/registro de información morfológica. Se usa después de abrir el caso, antes de diseñar.</span><div class="ache-purpose-tag">Datos de entrada</div></div>
+      <div class="ache-purpose-row"><b>Diseño CAD</b><span>Generación paramétrica del modelo conceptual: encaje/socket, largo, apoyo, arquitectura y archivo 3D revisable.</span><div class="ache-purpose-tag">Resultado técnico</div></div>
+      <div class="ache-purpose-row"><b>Guía clínica</b><span>Material de apoyo para evaluar compatibilidad protésica externa, alertas, requisitos del muñón y comunicación con profesionales.</span><div class="ache-purpose-tag">Revisión profesional</div></div>
+      <div class="ache-purpose-row"><b>Reporte</b><span>Documento de salida para compartir el caso con veterinario, rehabilitador, fabricante o equipo interno.</span><div class="ache-purpose-tag">Entrega</div></div>
+      <div class="ache-purpose-row"><b>Historial</b><span>Recuperación de casos ya cargados. No es un paso obligatorio dentro de un caso nuevo.</span><div class="ache-purpose-tag">Archivo</div></div>
     </section>
     """, unsafe_allow_html=True)
 
 def page_nuevo_caso():
-    st.header("🐕 Nuevo Caso")
+    st.header("Nuevo caso")
 
     with st.form("form_nuevo_caso", clear_on_submit=False):
         col1, col2 = st.columns(2)
@@ -1971,7 +1971,7 @@ def page_nuevo_caso():
                                  placeholder="Observaciones del veterinario...",
                                  height=80)
 
-        submitted = st.form_submit_button("💾 Registrar Caso", type="primary")
+        submitted = st.form_submit_button("Registrar caso", type="primary")
 
     if submitted:
         if not nombre_perro.strip() or not nombre_dueno.strip():
@@ -2007,7 +2007,7 @@ def page_nuevo_caso():
                     "prosthetic_specs", "uploaded_images", "scale_mm_per_px"]:
             st.session_state.pop(key, None)
 
-        st.success(f"✅ Caso #{case_id} registrado — **{nombre_perro}**. "
+        st.success(f"Caso #{case_id} registrado — **{nombre_perro}**. "
                    "Ahora podés ir a **Análisis de Imágenes**.")
 
 
@@ -2015,19 +2015,19 @@ def page_nuevo_caso():
 # PÁGINA: ANÁLISIS DE IMÁGENES
 # ─────────────────────────────────────────────────────────────────────────────
 def page_analisis():
-    st.header("📸 Análisis de Imágenes")
+    st.header("Análisis de imágenes")
 
     if "current_case" not in st.session_state:
-        st.warning("⚠️ No hay caso activo. Creá uno en **Nuevo Caso** o cargá uno desde **Historial**.")
+        st.warning("No hay caso activo. Creá uno en **Nuevo Caso** o cargá uno desde **Historial**.")
         return
 
     case = st.session_state.current_case
     st.success(f"Caso activo: **{case.get('nombre_perro')}** — {case.get('extremidad')}")
 
     tab1, tab2, tab3 = st.tabs([
-        "📷 Fotos y Detección de Raza",
-        "📏 Medición con ArUco",
-        "📊 Resumen de Medidas"
+        "Fotos y detección de raza",
+        "Medición con ArUco",
+        "Resumen de medidas"
     ])
 
     # ── TAB 1: Fotos + Raza ──────────────────────────────────────────────────
@@ -2065,7 +2065,7 @@ def page_analisis():
                     st.image(Image.open(f), caption=f"Foto {i+1}", width="stretch")
 
             st.divider()
-            st.subheader("🔍 Detección automática de raza")
+            st.subheader("Detección automática de raza")
 
             if st.button("Detectar raza", type="primary"):
                 best_results  = None
@@ -2106,7 +2106,7 @@ def page_analisis():
                         for i, r in enumerate(best_results[:3]):
                             name  = format_breed_name(r["label"])
                             score = r["score"] * 100
-                            emoji = ["🥇", "🥈", "🥉"][i]
+                            emoji = ["1.", "2.", "3."][i]
                             st.markdown(f"{emoji} **{name}** — {score:.1f}%")
                             st.progress(r["score"])
 
@@ -2165,7 +2165,7 @@ def page_analisis():
 
     # ── TAB 2: Medición ArUco ────────────────────────────────────────────────
     with tab2:
-        st.subheader("📏 Detección de marcador y medición")
+        st.subheader("Detección de marcador y medición")
 
         if "uploaded_images" not in st.session_state:
             st.info("Primero subí fotos en la pestaña anterior.")
@@ -2184,21 +2184,21 @@ def page_analisis():
 
         col_btn, col_info = st.columns([1, 2])
         with col_btn:
-            if st.button("🔎 Detectar marcador ArUco", type="primary"):
+            if st.button("Detectar marcador ArUco", type="primary"):
                 with st.spinner("Buscando marcador..."):
                     result_img, scale, found = detect_aruco(img_array.copy())
 
                 if found:
                     st.session_state.scale_mm_per_px = scale
                     st.session_state.aruco_result_img = result_img
-                    st.success(f"✅ Marcador detectado\nEscala: **{scale:.4f} mm/px**")
+                    st.success(f" Marcador detectado\nEscala: **{scale:.4f} mm/px**")
                 else:
-                    st.error("❌ No se detectó el marcador. Probá con otra foto o mejorá la iluminación.")
+                    st.error(" No se detectó el marcador. Probá con otra foto o mejorá la iluminación.")
 
         with col_info:
             if "scale_mm_per_px" in st.session_state:
                 sc = st.session_state.scale_mm_per_px
-                st.info(f"📐 Escala activa: **{sc:.4f} mm/px**  \n"
+                st.info(f" Escala activa: **{sc:.4f} mm/px**  \n"
                         f"1 cm = {10/sc:.0f} píxeles en esta foto")
 
         if "aruco_result_img" in st.session_state:
@@ -2208,7 +2208,7 @@ def page_analisis():
             st.image(selected_img, width="stretch")
 
         st.divider()
-        st.subheader("📝 Ingresá las medidas del muñón")
+        st.subheader(" Ingresá las medidas del muñón")
         st.markdown("""
         <div class="ache-info">
         Medí estas dimensiones con una cinta métrica sobre la extremidad del animal.
@@ -2236,7 +2236,7 @@ def page_analisis():
                 0.1, help="La parte más estrecha, en el extremo del muñón (donde va el encaje)"
             )
 
-        if st.button("💾 Guardar medidas", type="primary"):
+        if st.button(" Guardar medidas", type="primary"):
             meas = {
                 "munon_largo_cm":          munon_largo,
                 "munon_circunf_base_cm":   circunf_base,
@@ -2253,11 +2253,11 @@ def page_analisis():
                     st.session_state.get("breed_info")
                 )
 
-            st.success("✅ Medidas guardadas correctamente.")
+            st.success(" Medidas guardadas correctamente.")
 
     # ── TAB 3: Resumen ────────────────────────────────────────────────────────
     with tab3:
-        st.subheader("📊 Resumen de medidas")
+        st.subheader(" Resumen de medidas")
 
         if "measurements" not in st.session_state:
             st.info("Completá las medidas en la pestaña **Medición con ArUco**.")
@@ -2379,7 +2379,7 @@ def page_diseno():
           <p>Para generar una prótesis parametrizada primero necesitás completar el análisis de imágenes. Eso carga las medidas base del muñón/pata y evita diseñar a ojo.</p>
         </div>
         """, unsafe_allow_html=True)
-        if st.button("📸 Ir a fotos y análisis", type="primary"):
+        if st.button(" Ir a fotos y análisis", type="primary"):
             _go_to_page("fotos")
             st.rerun()
         return
@@ -2426,7 +2426,7 @@ def page_diseno():
         tipo_ext = st.selectbox("Extremidad", ["Delantera", "Trasera"], help="Luego se sumará izquierda/derecha y presets por extremidad.")
         material = st.selectbox("Material sugerido", ["PETG", "Nylon PA12", "TPU (flexible)", "PLA"], help="PLA queda para demo; para uso real habría que validar material y fatiga.")
 
-        if st.button("⚙️ Generar / actualizar diseño", type="primary", width="stretch"):
+        if st.button(" Generar / actualizar diseño", type="primary", width="stretch"):
             diam_eje = diam_socket * 0.65
             specs = {
                 "longitud_total_cm": long_prot,
@@ -2550,9 +2550,9 @@ def page_diseno():
 
                 dl1, dl2 = st.columns(2)
                 with dl1:
-                    st.download_button("📥 Descargar STL", data=stl_bytes, file_name="ache_protesis_biomecanica.stl", mime="model/stl", type="secondary", width="stretch")
+                    st.download_button(" Descargar STL", data=stl_bytes, file_name="ache_protesis_biomecanica.stl", mime="model/stl", type="secondary", width="stretch")
                 with dl2:
-                    st.download_button("📥 Descargar OpenSCAD", data=scad_parametrizado.encode("utf-8"), file_name="ache_protesis_biomecanica.scad", mime="text/plain", type="primary", width="stretch")
+                    st.download_button(" Descargar OpenSCAD", data=scad_parametrizado.encode("utf-8"), file_name="ache_protesis_biomecanica.scad", mime="text/plain", type="primary", width="stretch")
                 _motor = "OpenSCAD" if _use_openscad else "Python (fallback)"
                 st.caption(f"Malla: {len(verts):,} vértices · {len(faces):,} caras · Motor: {_motor}")
 
@@ -2572,7 +2572,7 @@ def page_diseno():
 # ─────────────────────────────────────────────────────────────────────────────
 def page_guia():
     """Guía clínica/protésica interactiva basada en la Guía Ache v0.2."""
-    st.header("🩺 Guía clínica y protésica")
+    st.header("Guía clínica y protésica")
 
     st.markdown("""
     <div class="ache-info">
@@ -2587,7 +2587,7 @@ def page_guia():
     if guia_docx.exists():
         with open(guia_docx, "rb") as f:
             st.download_button(
-                "📄 Descargar guía técnica completa v0.2",
+                " Descargar guía técnica completa v0.2",
                 data=f.read(),
                 file_name="Ache_Innovation_Guia_Tecnica_v0.2.docx",
                 mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
@@ -2636,7 +2636,7 @@ def page_guia():
 # PÁGINA: GENERAR REPORTE
 # ─────────────────────────────────────────────────────────────────────────────
 def page_reporte():
-    st.header("📋 Generar Reporte PDF")
+    st.header(" Generar Reporte PDF")
 
     case = st.session_state.get("current_case", {})
     if not case:
@@ -2646,7 +2646,7 @@ def page_reporte():
     st.markdown(f"**Caso:** {case.get('nombre_perro', '—')} — {case.get('nombre_dueno', '—')}")
     st.divider()
 
-    if st.button("📄 Generar PDF completo", type="primary"):
+    if st.button(" Generar PDF completo", type="primary"):
         if "measurements" not in st.session_state:
             st.warning("Agregá al menos las medidas del muñón antes de generar el reporte.")
             return
@@ -2672,7 +2672,7 @@ def page_reporte():
             mime="application/pdf",
             type="primary"
         )
-        st.success("✅ Reporte generado. Descargalo con el botón de arriba.")
+        st.success(" Reporte generado. Descargalo con el botón de arriba.")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -2724,7 +2724,7 @@ def _render_embedded_html_page(title: str, path: Path, intro: str, download_name
 
 def page_web_marketplace():
     _render_embedded_html_page(
-        "🌐 Web institucional y marketplace",
+        " Web institucional y marketplace",
         MASTER_ROOT / "02_Web_Institucional" / "ache-innovation-claude.html",
         "esta es la experiencia principal de Ache Innovation. Desde esta web se presenta la marca, productos, marketplace y acceso al módulo Biomechanics Studio para parametrización clínica.",
         "ache_innovation_web_marketplace.html",
@@ -2738,7 +2738,7 @@ def page_productivos():
     if not path.exists():
         path = bovinos_dir / "ache_innovation_SHARE.html"
     _render_embedded_html_page(
-        "🐄 Animales productivos",
+        " Animales productivos",
         path,
         "sección separada para bovinos y animales productivos, sin mezclarla con el software canino.",
         "ache_innovation_animales_productivos.html",
@@ -2746,7 +2746,7 @@ def page_productivos():
     )
 
 def page_historial():
-    st.header("🗄️ Historial de Casos")
+    st.header(" Historial de Casos")
 
     casos = get_cases(DB_PATH)
 
@@ -2847,13 +2847,13 @@ def main():
         render_brand_header()
         page = render_top_navigation(st.session_state.active_nav)
 
-    if   page == "🏠  Inicio":                    page_inicio()
-    elif page == "🐕  Nuevo Caso":                page_nuevo_caso()
-    elif page == "📸  Análisis de Imágenes":      page_analisis()
-    elif page == "🦴  Diseño de Prótesis":        page_diseno()
-    elif page == "🔪  Guía Quirúrgica":           page_guia()
-    elif page == "📋  Generar Reporte":           page_reporte()
-    elif page == "🗄️  Historial de Casos":        page_historial()
+    if   page == "Inicio":                    page_inicio()
+    elif page == "Nuevo caso":                page_nuevo_caso()
+    elif page == "Análisis":      page_analisis()
+    elif page == "Diseño CAD":        page_diseno()
+    elif page == "Guía clínica":           page_guia()
+    elif page == "Reporte":           page_reporte()
+    elif page == "Historial":        page_historial()
 
 
 if __name__ == "__main__":
