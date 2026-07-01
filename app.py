@@ -2128,6 +2128,10 @@ def page_analisis():
                         best_score    = results[0]["score"]
                         best_results  = results
                         best_file_idx = idx
+                except RuntimeError as e:
+                    st.session_state["breed_detection_service_error"] = True
+                    st.session_state["breed_detection_service_message"] = str(e)
+                    break
                 except Exception:
                     st.session_state["breed_detection_service_error"] = True
                     continue
@@ -2135,8 +2139,9 @@ def page_analisis():
             progress.empty()
 
             _service_failed = st.session_state.pop("breed_detection_service_error", False)
+            _service_message = st.session_state.pop("breed_detection_service_message", None)
             if _service_failed and not best_results:
-                st.warning("No se pudo completar la detección automática en este momento. Usá el selector de raza de trabajo para continuar el caso sin depender del servicio externo.")
+                st.warning(_service_message or "No se pudo completar la detección automática en este momento. Usá el selector de raza de trabajo para continuar el caso sin depender del servicio externo.")
 
             if best_results:
                 st.session_state.breed_results = best_results

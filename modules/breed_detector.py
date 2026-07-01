@@ -20,11 +20,17 @@ from PIL import Image
 
 
 # ── Modelos en cascada ────────────────────────────────────────────────────────
-_HF_BASE = "https://api-inference.huggingface.co/models"
-_MODELS = [
-    f"{_HF_BASE}/google/vit-base-patch16-224",   # primario — 120 razas caninas en ImageNet
-    f"{_HF_BASE}/microsoft/resnet-50",            # secundario — siempre activo en HF free tier
+# Hugging Face migró la inferencia al router nuevo. El endpoint viejo queda como
+# fallback, pero puede no resolver DNS según la red/proveedor.
+_HF_BASES = [
+    "https://router.huggingface.co/hf-inference/models",
+    "https://api-inference.huggingface.co/models",
 ]
+_MODEL_IDS = [
+    "google/vit-base-patch16-224",   # ImageNet, incluye muchas razas caninas
+    "microsoft/resnet-50",           # fallback general de clasificación
+]
+_MODELS = [f"{base}/{model_id}" for base in _HF_BASES for model_id in _MODEL_IDS]
 
 DOG_KEYWORDS = {
     "retriever", "labrador", "golden", "terrier", "spaniel", "poodle",
@@ -68,6 +74,8 @@ def _query_model(url: str, img_bytes: bytes, headers: dict) -> Optional[List[Dic
             return None
         except requests.exceptions.ConnectionError:
             return None
+        except requests.exceptions.RequestException:
+            return None
 
         if resp.status_code == 200:
             raw = resp.json()
@@ -81,6 +89,13 @@ def _query_model(url: str, img_bytes: bytes, headers: dict) -> Optional[List[Dic
                     normalized.append({"label": label, "score": score})
             return normalized if normalized else None
 
+        if resp.status_code == 401:
+            raise RuntimeError(
+                "La detección automática requiere configurar un token de Hugging Face "
+                "(HF_TOKEN) en Streamlit Cloud. Mientras tanto podés continuar con "
+                "raza de trabajo manual o mestizo/sin raza definida."
+            )
+
         if resp.status_code == 503:
             # Modelo cargando — esperamos máximo 8 segundos antes de pasar al siguiente
             try:
@@ -90,7 +105,7 @@ def _query_model(url: str, img_bytes: bytes, headers: dict) -> Optional[List[Dic
             time.sleep(wait)
             continue
 
-        # Cualquier otro error (401, 404, 429, 5xx) → no reintentar este modelo
+        # Cualquier otro error (404, 429, 5xx) → no reintentar este modelo
         return None
 
     return None
